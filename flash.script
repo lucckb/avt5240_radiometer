@@ -1,0 +1,23 @@
+halt
+wait_halt
+sleep 10
+#poll
+#sleep 10
+stm32x mass_erase 0
+sleep 10
+flash protect_check 0
+sleep 10
+#flash protect 0 0 2 off
+#flash info 0
+sleep 10
+#flash write_image main.elf 0x08000000
+flash write_image main.elf 0
+#flash write_image Output/main.bin 0
+sleep 100
+poll
+sleep 200
+halt
+sleep 200
+reset run
+sleep 200
+poll
