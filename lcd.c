@@ -29,20 +29,20 @@ GPIO_InitTypeDef GPIO_InitStructure;
 //Definicje poszczegolnych bitow
 static inline void RS(int n)
 {
-    if(n) GPIO_SetBits(GPIOC,GPIO_Pin_12);
-    else GPIO_ResetBits(GPIOC,GPIO_Pin_12);
+    if(n) GPIO_SetBits(GPIOB,GPIO_Pin_9);
+    else GPIO_ResetBits(GPIOB,GPIO_Pin_9);
 }
 
 static inline void RW(int n)
 {
-    if(n) GPIO_SetBits(GPIOC,GPIO_Pin_11);
-    else GPIO_ResetBits(GPIOC,GPIO_Pin_11);
+    if(n) GPIO_SetBits(GPIOB,GPIO_Pin_10);
+    else GPIO_ResetBits(GPIOB,GPIO_Pin_10);
 }
 
 static inline void EN(int n)
 {
-    if(n) GPIO_SetBits(GPIOC,GPIO_Pin_10);
-    else GPIO_ResetBits(GPIOC,GPIO_Pin_10);
+    if(n) GPIO_SetBits(GPIOB,GPIO_Pin_11);
+    else GPIO_ResetBits(GPIOB,GPIO_Pin_11);
 }
 
 
@@ -50,29 +50,24 @@ static inline void EN(int n)
 static inline void wr4(int n)
 {
 
-    if(n & 0x80) GPIO_SetBits(GPIOC,GPIO_Pin_0);
-    else GPIO_ResetBits(GPIOC,GPIO_Pin_0);
-    
-    if(n & 0x40) GPIO_SetBits(GPIOC,GPIO_Pin_1);
-    else GPIO_ResetBits(GPIOC,GPIO_Pin_1);
+    if(n & 0x80) GPIO_SetBits(GPIOB,GPIO_Pin_15);
+    else GPIO_ResetBits(GPIOB,GPIO_Pin_15);
 
-    if(n & 0x20) GPIO_SetBits(GPIOC,GPIO_Pin_2);
-    else GPIO_ResetBits(GPIOC,GPIO_Pin_2);
-    
-    if(n & 0x10) GPIO_SetBits(GPIOC,GPIO_Pin_3);
-    else GPIO_ResetBits(GPIOC,GPIO_Pin_3);
+    if(n & 0x40) GPIO_SetBits(GPIOB,GPIO_Pin_14);
+    else GPIO_ResetBits(GPIOB,GPIO_Pin_14);
+
+    if(n & 0x20) GPIO_SetBits(GPIOB,GPIO_Pin_13);
+    else GPIO_ResetBits(GPIOB,GPIO_Pin_13);
+
+    if(n & 0x10) GPIO_SetBits(GPIOB,GPIO_Pin_12);
+    else GPIO_ResetBits(GPIOB,GPIO_Pin_12);
 
 }
 
 static inline uint8_t rd4(void)
 {
-    int r = 0;
-    int n = GPIO_ReadInputData(GPIOC);
-    if(n & 1) r|=0x80;
-    if(n & 2) r|=0x40;
-    if(n & 4) r|=0x20;
-    if(n & 8) r|=0x10;
-    return r;
+    int n = ((GPIO_ReadInputData(GPIOB)>>12)<<4)& 0xf0;
+    return n;
 }
 
 
@@ -84,17 +79,17 @@ static inline void dportDir(bool out)
 {
     if(out)
     {
-       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 |GPIO_Pin_2| GPIO_Pin_3;
+       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 |GPIO_Pin_14| GPIO_Pin_15;
        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-       GPIO_Init(GPIOC, &GPIO_InitStructure);
+       GPIO_Init(GPIOB, &GPIO_InitStructure);
     }
     else
     {
-       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 |GPIO_Pin_2| GPIO_Pin_3;
+       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 |GPIO_Pin_14| GPIO_Pin_15;
        GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
        GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-       GPIO_Init(GPIOC, &GPIO_InitStructure);
+       GPIO_Init(GPIOB, &GPIO_InitStructure);
     }
 }
 
@@ -167,11 +162,10 @@ void lcdInit(void)
     /* Enable GPIOC clock */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
 
-    /* Configure PC.4 as Output push-pull */
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 |GPIO_Pin_2| GPIO_Pin_3 |GPIO_Pin_10 |GPIO_Pin_11 |GPIO_Pin_12;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10 |GPIO_Pin_11| GPIO_Pin_12 |GPIO_Pin_13 |GPIO_Pin_14 |GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_Init(GPIOC, &GPIO_InitStructure);
+    GPIO_Init(GPIOB, &GPIO_InitStructure);
 
     EN(0); RW(0); EN(0);
 
