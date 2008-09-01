@@ -1,4 +1,4 @@
-halt
+reset halt
 wait_halt
 sleep 10
 #poll
@@ -21,3 +21,4 @@ sleep 200
 reset run
 sleep 200
 poll
+

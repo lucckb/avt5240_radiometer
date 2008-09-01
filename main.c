@@ -1,70 +1,62 @@
-/******************** (C) COPYRIGHT 2007 STMicroelectronics ********************
-* File Name          : main.c
-* Author             : MCD Application Team
-* Version            : V1.0
-* Date               : 10/08/2007
-* Description        : Main program body
-********************************************************************************
-* THE PRESENT SOFTWARE WHICH IS FOR GUIDANCE ONLY AIMS AT PROVIDING CUSTOMERS
-* WITH CODING INFORMATION REGARDING THEIR PRODUCTS IN ORDER FOR THEM TO SAVE TIME.
-* AS A RESULT, STMICROELECTRONICS SHALL NOT BE HELD LIABLE FOR ANY DIRECT,
-* INDIRECT OR CONSEQUENTIAL DAMAGES WITH RESPECT TO ANY CLAIMS ARISING FROM THE
-* CONTENT OF SUCH SOFTWARE AND/OR THE USE MADE BY CUSTOMERS OF THE CODING
-* INFORMATION CONTAINED HEREIN IN CONNECTION WITH THEIR PRODUCTS.
-*******************************************************************************/
-
-/* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_lib.h"
 #include "lcd.h"
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
+
+
 GPIO_InitTypeDef GPIO_InitStructure;
 ErrorStatus HSEStartUpStatus;
 TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 TIM_OCInitTypeDef  TIM_OCInitStructure;
-/* Private function prototypes -----------------------------------------------*/
+
+
 void RCC_Configuration(void);
 void NVIC_Configuration(void);
 void Delay(vu32 nCount);
 
-/* Private functions ---------------------------------------------------------*/
 
-/*******************************************************************************
-* Function Name  : main
-* Description    : Main program.
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
-
-
+//External crystal on
 #define RCC_CR_HSEON (1<<16)
-
+//External bypass
 #define RCC_CR_HSEBYP (1<<18)
-
+//Crystal oscilator ready
 #define RCC_CR_HSERDY (1<<17)
+//Enable prefetch in flash CR
+#define FLASH_ACR_PRFTBE 0x10
+//Set flash latency to 0
+#define FLASH_ACR_LATENCY_0 0
+//High speed external as system clock
+#define RCC_CFGR_SW_HSE 0x01
+//MCO as system clock
+#define RCC_CFGR_MCO_SYSCLK (4<<24)
+
+//HSE oscilator control
+#define RCC_CR_HSI_ON (1<<0)
 
 
-/*
-void system_setup()
+//Cortex stm32 clocks setup
+static void system_setup(void)
 {
     //Configure CLK clock
     RCC->CR &= ~RCC_CR_HSEON;
     //Disable Bypass
     RCC->CR &= ~RCC_CR_HSEBYP;
     //Enable high speed oscilator
-    RCC->CR  |= RCC_CR_HSE_ON;
+    RCC->CR  |= RCC_CR_HSEON;
     //Wait for setup HSE
     for(int i=0;i<8192;i++)
     {
         if(RCC->CR & RCC_CR_HSERDY) break;
     }
+    //Configure flash: Prefetch enable and 0 wait state
+    FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_0; 
+    //Configure system clocks ALL clocks freq 8MHz
+    RCC->CFGR = RCC_CFGR_SW_HSE | RCC_CFGR_MCO_SYSCLK;
+    // At end disable HSI oscilator for power reduction
+    RCC->CR &= ~RCC_CR_HSI_ON;
+    //Setup NVIC vector at begin of flash
+    SCB->VTOR = 0;
+    
+}	
 
-}
-
-*/
 
 extern volatile int Tim;
 extern volatile int Tim1;
@@ -72,16 +64,14 @@ extern volatile int Tim1;
 
 int main(void)
 {
-#ifdef DEBUG
-  debug();
-#endif
 
-//  system_setup();
   /* Configure the system clocks */
-  RCC_Configuration();
-
+  //RCC_Configuration();
+  
+  system_setup();
+  
   /* NVIC Configuration */
-  NVIC_Configuration();
+ // NVIC_Configuration();
 
   /* Enable GPIOC clock */
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
@@ -106,13 +96,13 @@ int main(void)
   SysTick_CounterCmd(SysTick_Counter_Enable);
 
   lcdInit();
-  lcdPutStr("Linia1");
+  lcdPutStr("LiniaZ");
   lcdSetPos(0x40);
   lcdPutStr("Linia2");
   
   //Enable PWM generation
   /* Time base configuration */
-  TIM_TimeBaseStructure.TIM_Period = 99;
+  TIM_TimeBaseStructure.TIM_Period = 199;
   TIM_TimeBaseStructure.TIM_Prescaler = 0;
   TIM_TimeBaseStructure.TIM_ClockDivision = 0;
   TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
@@ -122,7 +112,7 @@ int main(void)
   /* PWM1 Mode configuration: Channel1 */
   TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM1;
 //  TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-  TIM_OCInitStructure.TIM_Pulse = 50;
+  TIM_OCInitStructure.TIM_Pulse = 100;
   TIM_OCInitStructure.TIM_Channel = TIM_Channel_1;
   TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
 
@@ -163,13 +153,18 @@ int main(void)
       TIM2->SMCR = (1<<15) | (1<<14);
     TIM_Cmd(TIM2, ENABLE); 
     Tim1 = 4000; //40 second
+
+    //Setup low power modes
+    NVIC_SystemLPConfig(NVIC_LP_SLEEPONEXIT, DISABLE);
 while(1)
 {
     lcdSetPos(0x40);
     lcdPutStr("        ");
     lcdSetPos(0x40);
     lcdPutInt(TIM2->CNT);
+    lcdPutStr("uRh");
     Tim=10;
+    asm volatile("wfi");
     while(Tim);
     if(Tim1==0)
     {
@@ -178,6 +173,7 @@ while(1)
         lcdPutStr("        ");
         lcdSetPos(0);
         lcdPutInt(TIM2->CNT);
+        lcdPutStr("uRh");
         TIM2->CNT = 0;
     }
 }
@@ -202,13 +198,7 @@ while(1)
   }
 }
 
-/*******************************************************************************
-* Function Name  : RCC_Configuration
-* Description    : Configures the different system clocks.
- Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
+
 void RCC_Configuration(void)
 {
   /* RCC system reset(for debug purpose) */
@@ -216,17 +206,17 @@ void RCC_Configuration(void)
 
   /* Enable HSE */
   RCC_HSEConfig(RCC_HSE_ON);
-
+  
   /* Wait till HSE is ready */
   HSEStartUpStatus = RCC_WaitForHSEStartUp();
 
   if(HSEStartUpStatus == SUCCESS)
-  {
+	{
     /* Enable Prefetch Buffer */
     FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
 
     /* Flash 2 wait state */
-    FLASH_SetLatency(FLASH_Latency_2);
+    FLASH_SetLatency(FLASH_Latency_0);
  	
     /* HCLK = SYSCLK */
     RCC_HCLKConfig(RCC_SYSCLK_Div1); 
@@ -235,36 +225,30 @@ void RCC_Configuration(void)
     RCC_PCLK2Config(RCC_HCLK_Div1); 
 
     /* PCLK1 = HCLK/2 */
-    RCC_PCLK1Config(RCC_HCLK_Div2);
+    RCC_PCLK1Config(RCC_HCLK_Div1);
 
     /* PLLCLK = 8MHz * 9 = 72 MHz */
-    RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);
+    //RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);
 
     /* Enable PLL */ 
-    RCC_PLLCmd(ENABLE);
+    //RCC_PLLCmd(ENABLE);
 
     /* Wait till PLL is ready */
-    while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
-    {
-    }
+    //while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
+    //{
+    //}
 
     /* Select PLL as system clock source */
-    RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);
+    RCC_SYSCLKConfig(RCC_SYSCLKSource_HSE);
 
     /* Wait till PLL is used as system clock source */
-    while(RCC_GetSYSCLKSource() != 0x08)
-    {
-    }
+    //while(RCC_GetSYSCLKSource() != 0x08)
+    //{
+    //}
   }
 }
 
-/*******************************************************************************
-* Function Name  : NVIC_Configuration
-* Description    : Configures Vector Table base location.
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
+
 void NVIC_Configuration(void)
 {
 #ifdef  VECT_TAB_RAM  
@@ -276,38 +260,10 @@ void NVIC_Configuration(void)
 #endif
 }
 
-/*******************************************************************************
-* Function Name  : Delay
-* Description    : Inserts a delay time.
-* Input          : nCount: specifies the delay time length.
-* Output         : None
-* Return         : None
-*******************************************************************************/
+
 void Delay(vu32 nCount)
 {
   for(; nCount != 0; nCount--);
 }
 
-#ifdef  DEBUG
-/*******************************************************************************
-* Function Name  : assert_failed
-* Description    : Reports the name of the source file and the source line number
-*                  where the assert_param error has occurred.
-* Input          : - file: pointer to the source file name
-*                  - line: assert_param error line source number
-* Output         : None
-* Return         : None
-*******************************************************************************/
-void assert_failed(u8* file, u32 line)
-{ 
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
 
-  /* Infinite loop */
-  while (1)
-  {
-  }
-}
-#endif
-
-/******************* (C) COPYRIGHT 2007 STMicroelectronics *****END OF FILE****/

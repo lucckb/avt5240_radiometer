@@ -1,6 +1,6 @@
 # setup
 
-COMPILE_OPTS = -mcpu=cortex-m3 -mthumb -Wall -g -O0
+COMPILE_OPTS = -mcpu=cortex-m3 -mthumb -Wall -g -O0 -std=gnu99
 INCLUDE_DIRS = -I . -I lib/inc
 LIBRARY_DIRS = -L lib
 
