@@ -28,6 +28,7 @@
 #define LCD_RW_PIN (1<<10)  //LCD RW signal Pin10
 #define LCD_EN_PIN (1<<11)  //LCD RW signal Pin11
 #define LCD_PORT GPIOB		//LCD GPIO port
+#define LCD_APB_CLOCK_BIT RCC_APB2Periph_GPIOB //LCD APB clock bit
 
 #define LCD_DATA_BITS_MASK 0xf000
 #define LCD_GPIO_DATA_CRH_MASK 0xffff0000
@@ -105,6 +106,7 @@ static inline void dataport_dir(bool out)
 }
 
 /*----------------------------------------------------------*/
+
 /** GPIO Initialize 
  * Initialize bit 15-9 in LCD port 
  **/
@@ -112,7 +114,7 @@ static void gpio_init(void)
 {
 
 	/* Enable GPIOC clock */
-    RCC->APB2ENR |= RCC_APB2Periph_GPIOC;
+    RCC->APB2ENR |= LCD_APB_CLOCK_BIT;
     
     //Output mode 10MHz bit15-bit12
     LCD_PORT->CRH &= ~LCD_GPIO_ALL_CRH_MASK;

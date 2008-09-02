@@ -53,7 +53,7 @@ static void system_setup(void)
     // At end disable HSI oscilator for power reduction
     RCC->CR &= ~RCC_CR_HSI_ON;
     //Setup NVIC vector at begin of flash
-    SCB->VTOR = 0;
+    SCB->VTOR = NVIC_VectTab_FLASH;
     
 }	
 
@@ -64,17 +64,14 @@ extern volatile int Tim1;
 
 int main(void)
 {
-
-  /* Configure the system clocks */
-  //RCC_Configuration();
   
-  system_setup();
   
-  /* NVIC Configuration */
- // NVIC_Configuration();
-
-  /* Enable GPIOC clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+	//Initialize system perhiperals
+	system_setup();
+	
+	//Initialize LCD
+	lcdInit();
+	
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
     /* TIM3 clock enable */
@@ -95,7 +92,6 @@ int main(void)
 
   SysTick_CounterCmd(SysTick_Counter_Enable);
 
-  lcdInit();
   lcdPutStr("LiniaA");
   lcdSetPos(0x40);
   lcdPutStr("Linia2");
@@ -177,88 +173,9 @@ while(1)
         TIM2->CNT = 0;
     }
 }
-      while (1)
-  {
-    /* Turn on led connected to PC.4 pin */
-    GPIO_SetBits(GPIOB, GPIO_Pin_12);
-    /* Insert delay */
-    //Delay(0xAFFFF);
-    Tim = 100;
-    while(Tim);
-  
-    //volatile float x;
-    //x = x*12.3;
-  
-    /* Turn off led connected to PC.4 pin */
-    GPIO_ResetBits(GPIOB, GPIO_Pin_12);
-    /* Insert delay */
-    //Delay(0xAFFFF);
-    Tim = 100;
-    while(Tim);
-  }
+      
 }
 
-
-void RCC_Configuration(void)
-{
-  /* RCC system reset(for debug purpose) */
-  RCC_DeInit();
-
-  /* Enable HSE */
-  RCC_HSEConfig(RCC_HSE_ON);
-  
-  /* Wait till HSE is ready */
-  HSEStartUpStatus = RCC_WaitForHSEStartUp();
-
-  if(HSEStartUpStatus == SUCCESS)
-	{
-    /* Enable Prefetch Buffer */
-    FLASH_PrefetchBufferCmd(FLASH_PrefetchBuffer_Enable);
-
-    /* Flash 2 wait state */
-    FLASH_SetLatency(FLASH_Latency_0);
- 	
-    /* HCLK = SYSCLK */
-    RCC_HCLKConfig(RCC_SYSCLK_Div1); 
-  
-    /* PCLK2 = HCLK */
-    RCC_PCLK2Config(RCC_HCLK_Div1); 
-
-    /* PCLK1 = HCLK/2 */
-    RCC_PCLK1Config(RCC_HCLK_Div1);
-
-    /* PLLCLK = 8MHz * 9 = 72 MHz */
-    //RCC_PLLConfig(RCC_PLLSource_HSE_Div1, RCC_PLLMul_9);
-
-    /* Enable PLL */ 
-    //RCC_PLLCmd(ENABLE);
-
-    /* Wait till PLL is ready */
-    //while(RCC_GetFlagStatus(RCC_FLAG_PLLRDY) == RESET)
-    //{
-    //}
-
-    /* Select PLL as system clock source */
-    RCC_SYSCLKConfig(RCC_SYSCLKSource_HSE);
-
-    /* Wait till PLL is used as system clock source */
-    //while(RCC_GetSYSCLKSource() != 0x08)
-    //{
-    //}
-  }
-}
-
-
-void NVIC_Configuration(void)
-{
-#ifdef  VECT_TAB_RAM  
-  /* Set the Vector Table base location at 0x20000000 */ 
-  NVIC_SetVectorTable(NVIC_VectTab_RAM, 0x0); 
-#else  /* VECT_TAB_FLASH  */
-  /* Set the Vector Table base location at 0x08000000 */ 
-  NVIC_SetVectorTable(NVIC_VectTab_FLASH, 0x0);   
-#endif
-}
 
 
 void Delay(vu32 nCount)
