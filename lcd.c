@@ -1,6 +1,6 @@
 /*
-    Str912 book example8 - LCD Char C library
-    Copyright (C) 2007  Lucjan Bryndza <lucjan.bryndza@ep.com.pl>
+    LCD Char STM32 library
+    Copyright (C) 2008  Lucjan Bryndza <lucjan.bryndza@ep.com.pl>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -21,78 +21,107 @@
 #include "lcd.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "stm32f10x_lib.h"
 
-GPIO_InitTypeDef GPIO_InitStructure;
 
 /*----------------------------------------------------------*/
-//Definicje poszczegolnych bitow
-static inline void RS(int n)
+#define LCD_RS_PIN (1<<9)	//LCD RS signal Pin9
+#define LCD_RW_PIN (1<<10)  //LCD RW signal Pin10
+#define LCD_EN_PIN (1<<11)  //LCD RW signal Pin11
+#define LCD_PORT GPIOB		//LCD GPIO port
+
+#define LCD_DATA_BITS_MASK 0xf000
+#define LCD_GPIO_DATA_CRH_MASK 0xffff0000
+#define LCD_GPIO_ALL_CRH_MASK 0xfffffff0
+#define GPIO_MODE_PULLUP_INPUT 2
+#define GPIO_MODE_10MHZ 1
+
+
+/*----------------------------------------------------------*/
+//LCD RW signal control
+static inline void rs(bool bit_val)
 {
-    if(n) GPIO_SetBits(GPIOB,GPIO_Pin_9);
-    else GPIO_ResetBits(GPIOB,GPIO_Pin_9);
+	if(bit_val) LCD_PORT->BSRR = LCD_RS_PIN;
+	else LCD_PORT->BRR = LCD_RS_PIN;
 }
 
-static inline void RW(int n)
+/*----------------------------------------------------------*/
+//LCD RW signal control
+static inline void rw(bool bit_val)
 {
-    if(n) GPIO_SetBits(GPIOB,GPIO_Pin_10);
-    else GPIO_ResetBits(GPIOB,GPIO_Pin_10);
+	if(bit_val) LCD_PORT->BSRR = LCD_RW_PIN;
+	else  LCD_PORT->BRR = LCD_RW_PIN;
 }
 
-static inline void EN(int n)
+/*----------------------------------------------------------*/
+//LCD E signal control
+static inline void en(bool bit_val)
 {
-    if(n) GPIO_SetBits(GPIOB,GPIO_Pin_11);
-    else GPIO_ResetBits(GPIOB,GPIO_Pin_11);
-}
-
-
-
-static inline void wr4(int n)
-{
-
-    if(n & 0x80) GPIO_SetBits(GPIOB,GPIO_Pin_15);
-    else GPIO_ResetBits(GPIOB,GPIO_Pin_15);
-
-    if(n & 0x40) GPIO_SetBits(GPIOB,GPIO_Pin_14);
-    else GPIO_ResetBits(GPIOB,GPIO_Pin_14);
-
-    if(n & 0x20) GPIO_SetBits(GPIOB,GPIO_Pin_13);
-    else GPIO_ResetBits(GPIOB,GPIO_Pin_13);
-
-    if(n & 0x10) GPIO_SetBits(GPIOB,GPIO_Pin_12);
-    else GPIO_ResetBits(GPIOB,GPIO_Pin_12);
-
-}
-
-static inline uint8_t rd4(void)
-{
-    int n = ((GPIO_ReadInputData(GPIOB)>>12)<<4)& 0xf0;
-    return n;
+	if(bit_val) LCD_PORT->BSRR = LCD_EN_PIN;
+	else  LCD_PORT->BRR = LCD_EN_PIN;
 }
 
 
-#define DPORT_IN false
-#define DPORT_OUT true
+/*----------------------------------------------------------*/
+//Write data to LCD bus
+static inline void wr_data(uint8_t d_7_4_val)
+{
+	LCD_PORT->BRR = LCD_DATA_BITS_MASK;
+	LCD_PORT->BSRR = ((int)d_7_4_val & 0xf0) << 8;
+}
 
-//Przelacza port IO z wejscia na wyjscie i odwrotnie
-static inline void dportDir(bool out)
+
+/*----------------------------------------------------------*/
+//Read data from LCD bus 
+static inline uint8_t rd_data(void)
+{
+	return ((LCD_PORT->IDR>>12)<<4)& 0xf0;
+}
+
+/*----------------------------------------------------------*/
+#define DPORT_IN false	/* Input mode */
+#define DPORT_OUT true  /* Output mode */
+
+//Switch LCD Bus from input to output
+static inline void dataport_dir(bool out)
 {
     if(out)
     {
-       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 |GPIO_Pin_14| GPIO_Pin_15;
-       GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-       GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-       GPIO_Init(GPIOB, &GPIO_InitStructure);
+
+       //Output mode 10MHz bit15-bit12
+       LCD_PORT->CRH &= ~LCD_GPIO_DATA_CRH_MASK;
+       LCD_PORT->CRH |= (GPIO_MODE_10MHZ << 28) | (GPIO_MODE_10MHZ << 24) |
+       				(GPIO_MODE_10MHZ << 20) | (GPIO_MODE_10MHZ << 16);
+       
     }
     else
     {
-       GPIO_InitStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 |GPIO_Pin_14| GPIO_Pin_15;
-       GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-       GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-       GPIO_Init(GPIOB, &GPIO_InitStructure);
+      //Input mode pull up bit15-bit12
+       LCD_PORT->CRH &= ~LCD_GPIO_DATA_CRH_MASK;
+       LCD_PORT->CRH |= (GPIO_MODE_PULLUP_INPUT << 30) | (GPIO_MODE_PULLUP_INPUT << 26) |
+       					(GPIO_MODE_PULLUP_INPUT << 22) | (GPIO_MODE_PULLUP_INPUT << 18);
+       //Pull up configuration
+       LCD_PORT->ODR |= LCD_DATA_BITS_MASK; 
     }
 }
 
+/*----------------------------------------------------------*/
+/** GPIO Initialize 
+ * Initialize bit 15-9 in LCD port 
+ **/
+static void gpio_init(void)
+{
+
+	/* Enable GPIOC clock */
+    RCC->APB2ENR |= RCC_APB2Periph_GPIOC;
+    
+    //Output mode 10MHz bit15-bit12
+    LCD_PORT->CRH &= ~LCD_GPIO_ALL_CRH_MASK;
+    LCD_PORT->CRH |= (GPIO_MODE_10MHZ << 28) | (GPIO_MODE_10MHZ << 24) |
+           			  (GPIO_MODE_10MHZ << 20) | (GPIO_MODE_10MHZ << 16) |
+           			  (GPIO_MODE_10MHZ << 12) | (GPIO_MODE_10MHZ << 8) | 
+           			  (GPIO_MODE_10MHZ << 4);
+ 
+}
 
 /*----------------------------------------------------------*/
 //czeka n mikrosekund
@@ -107,29 +136,27 @@ static void delay_us(int us)
 //Czeka sprawdzajac flage zajetosci
 static void wait4lcd(void)
 {
-    //delay_us(2000);
-    //return;
     uint8_t r;
 	int tout = 16000;
 	//Sprawdzenie czy jest wolny wyswietlacz
 	do
 	{
-		EN(0);
-		RS(0);
-		RW(1);
-		dportDir(DPORT_IN);
-		EN(1);
+		en(0);
+		rs(0);
+		rw(1);
+		dataport_dir(DPORT_IN);
+		en(1);
 		delay_us(1);
-        r = rd4();
-		EN(0);
+        r = rd_data();
+		en(0);
         delay_us(2);
-        EN(1);
+        en(1);
         delay_us(1);
-        EN(0);
+        en(0);
 		if(--tout == 0) return;
 	}
 	while(r & 0x80);
-	dportDir(DPORT_OUT);
+	dataport_dir(DPORT_OUT);
 }
 
 /*----------------------------------------------------------*/
@@ -138,19 +165,19 @@ static void wait4lcd(void)
 static void write_lcd(uint8_t val,bool command)
 {
     //Wlasciwy zapis danej do portu (Interfejs 4 bitowy)
-	EN(0);
-	RW(0);
-	if(command) RS(0);
-    else RS(1);
-    wr4(val);
-	EN(1);
+	en(0);
+	rw(0);
+	if(command) rs(0);
+    else rs(1);
+    wr_data(val);
+	en(1);
 	delay_us(1);
-    EN(0);
+    en(0);
     delay_us(1);
-    wr4(val<<4);
-    EN(1);
+    wr_data(val<<4);
+    en(1);
     delay_us(1);
-    EN(0);
+    en(0);
 }
 
 
@@ -158,34 +185,29 @@ static void write_lcd(uint8_t val,bool command)
 //Inicjalizacja modulu LCD
 void lcdInit(void)
 {
-    /** Inicjalizacja  GPIO **/
-    /* Enable GPIOC clock */
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
+    
+	//Initialize gpio
+	gpio_init();
+	
+    en(0); rw(0); en(0);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_10 |GPIO_Pin_11| GPIO_Pin_12 |GPIO_Pin_13 |GPIO_Pin_14 |GPIO_Pin_15;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_10MHz;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-    EN(0); RW(0); EN(0);
-
-    wr4(0x30);
-    EN(1);
+    wr_data(0x30);
+    en(1);
     delay_us(1);
-    EN(0);
+    en(0);
     delay_us(20000);
-    EN(1);
+    en(1);
     delay_us(1);
-    EN(0);
+    en(0);
     delay_us(20000);
-    EN(1);
+    en(1);
     delay_us(1);
-    EN(0);
-    wr4(0x20);
+    en(0);
+    wr_data(0x20);
     delay_us(20000);
-    EN(1);
+    en(1);
     delay_us(1);
-    EN(0);
+    en(0);
     delay_us(20000);
 
 
@@ -197,27 +219,6 @@ void lcdInit(void)
     wait4lcd();
 	write_lcd(1,1);	//Wyczysc wyswietlacz..
     wait4lcd();
-
-
-/*
-     write_lcd(0x28, 1);
-     wait4lcd();
-	//Wyczysc wyswietlacz
-     write_lcd(0x01, 1);
-     wait4lcd();
-	//Ustawienie kierunku zwiekszania linii
-     write_lcd(0x06, 1);
-     wait4lcd();
-	//Przesuwanie kursora w prawo
-     write_lcd(0x0c, 1);
-     wait4lcd();
-	//Ustawienie kursora na pozycji poczatkowej
-     write_lcd(0x02, 1);
-     wait4lcd();
-    //Ustawienie adresu znakow na poczatek
-     write_lcd(0x80, 1);
-     wait4lcd();
-*/
 
 }
 

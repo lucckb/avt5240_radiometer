@@ -96,7 +96,7 @@ int main(void)
   SysTick_CounterCmd(SysTick_Counter_Enable);
 
   lcdInit();
-  lcdPutStr("LiniaZ");
+  lcdPutStr("LiniaA");
   lcdSetPos(0x40);
   lcdPutStr("Linia2");
   
