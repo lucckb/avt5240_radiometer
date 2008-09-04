@@ -4,8 +4,15 @@
 
 
 
-extern volatile int Tim;
-extern volatile int Tim1;
+volatile int Tim = 0;
+volatile int Tim1 = 0;
+
+void sys_tick_handler(void)
+{
+    if(Tim) --Tim;
+    if(Tim1) --Tim1;
+
+}
 
 
 int main(void)

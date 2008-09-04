@@ -11,7 +11,7 @@ sleep 10
 #flash info 0
 sleep 10
 #flash write_image main.elf 0x08000000
-flash write_image main.elf 0
+flash write_image radiometer.elf 0
 #flash write_image Output/main.bin 0
 sleep 100
 poll
