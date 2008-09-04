@@ -72,6 +72,12 @@ void systick_setup(int reload)
 #define CCER_CC1P_Reset             ((u16)0x3331)
 #define TIM_OCPreload_Enable        ((u16)0x0008)
 #define CR1_ARPE_Set                ((u16)0x0080)
+#define CR1_CEN_Set                 ((u16)0x0001)
+
+#define GPIO_BIT6_CRL_MASK 0xf0ffffff
+#define GPIO_CNF_ALT_PUSHPULL 2
+#define GPIO_MODE_10MHZ 1
+
 
 //Enable 20kHZ signal voltage dubler for LCD power supply
 void lcd_pwm_setup(void)
@@ -99,6 +105,33 @@ void lcd_pwm_setup(void)
 	TIM3->CCMR1 |= TIM_OCPreload_Enable;
 	//Auto reload register is buffered
 	TIM3->CR1 |= CR1_ARPE_Set;
+	//Enable gpio PWM line
+	RCC->APB2ENR |= RCC_APB2Periph_GPIOA;
+	//Max PA.6 signal
+	GPIOA->CRL &= GPIO_BIT6_CRL_MASK;
+	GPIOA->CRL |= (GPIO_MODE_10MHZ << 24) | (GPIO_CNF_ALT_PUSHPULL<<26);
+	//Enable timer
+	TIM3->CR1 |= CR1_CEN_Set;
 }
+
+/*----------------------------------------------------------*/
+#define GPIO_BIT0_CRL_MASK 0xfffffff0
+#define GPIO_INPUT_FLOAT 1
+
+//Setup counter with standard russian counting alg.
+void count_std_setup(void)
+{
+	//Enable APB perhiperal
+	RCC->APB2ENR |= RCC_APB2Periph_GPIOA;
+	RCC->APB1ENR |= RCC_APB1Periph_TIM2;
+	//Setup GPIOA.0 as input
+	GPIOA->CRL &= GPIO_BIT0_CRL_MASK;
+	GPIOA->CRL |= GPIO_INPUT_FLOAT << 2;
+	//Configure timer for counting external events
+	TIM2->SMCR = (1<<15) | (1<<14);
+	//Enable timer
+	TIM2->CR1 |= CR1_CEN_Set;
+}
+
 
 

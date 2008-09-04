@@ -18,5 +18,10 @@ void lcd_pwm_setup(void);
 
 /*----------------------------------------------------------*/
 
+//Setup counter with standard russian counting alg.
+void count_std_setup(void);
+
+/*----------------------------------------------------------*/
+
 
 #endif /*SYSTEM_H_*/

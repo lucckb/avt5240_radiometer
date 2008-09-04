@@ -1,11 +1,5 @@
 Archive member included because of file (symbol)
 
-lib/libstm32.a(stm32f10x_gpio.o)
-                              main.o (GPIO_Init)
-lib/libstm32.a(stm32f10x_rcc.o)
-                              main.o (RCC_APB2PeriphClockCmd)
-lib/libstm32.a(stm32f10x_tim.o)
-                              main.o (TIM_Cmd)
 lib/libstm32.a(stm32f10x_vector.o)
                               (Reset_Handler)
 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
@@ -39,9 +33,6 @@ Allocating common symbols
 Common symbol       size              file
 
 errno               0x4               /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
-TIM_OCInitStructure
-                    0x8               main.o
-GPIO_InitStructure  0xc               main.o
 
 Discarded input sections
 
@@ -69,11 +60,6 @@ Discarded input sections
  .data          0x0000000000000000        0x0 lcd.o
  .bss           0x0000000000000000        0x0 lcd.o
  .data          0x0000000000000000        0x0 stm32f10x_it.o
- .data          0x0000000000000000        0x0 lib/libstm32.a(stm32f10x_gpio.o)
- .bss           0x0000000000000000        0x0 lib/libstm32.a(stm32f10x_gpio.o)
- .data          0x0000000000000000        0x0 lib/libstm32.a(stm32f10x_rcc.o)
- .data          0x0000000000000000        0x0 lib/libstm32.a(stm32f10x_tim.o)
- .bss           0x0000000000000000        0x0 lib/libstm32.a(stm32f10x_tim.o)
  .data          0x0000000000000000        0x0 lib/libstm32.a(stm32f10x_vector.o)
  .bss           0x0000000000000000        0x0 lib/libstm32.a(stm32f10x_vector.o)
  .text          0x0000000000000000        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
@@ -286,265 +272,136 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
  *(.flashtext)
                 0x000000000800010c                . = ALIGN (0x4)
 
-.text           0x000000000800010c     0x3360
+.text           0x000000000800010c      0x640
                 0x000000000800010c                . = ALIGN (0x4)
  *(.text)
- .text          0x000000000800010c      0x18c system.o
-                0x00000000080001cc                lcd_pwm_setup
+ .text          0x000000000800010c      0x16c system.o
+                0x0000000008000198                lcd_pwm_setup
                 0x000000000800010c                system_setup
-                0x0000000008000198                systick_setup
- .text          0x0000000008000298      0x150 main.o
-                0x0000000008000298                main
- .text          0x00000000080003e8      0x5a0 lcd.o
-                0x000000000800095c                lcdSetPos
-                0x00000000080007c0                lcdPutStr
-                0x00000000080006cc                lcdInit
-                0x0000000008000920                lcdCommand
-                0x0000000008000830                lcdPutInt
-                0x000000000800080c                lcdPutChar
-                0x00000000080007f4                lcdClear
- .text          0x0000000008000988      0x290 stm32f10x_it.o
-                0x0000000008000a74                EXTI2_IRQHandler
-                0x000000000800099c                MemManageException
-                0x00000000080009a4                BusFaultException
-                0x0000000008000b58                TIM1_CC_IRQHandler
-                0x0000000008000a20                PVD_IRQHandler
-                0x0000000008000a80                EXTI3_IRQHandler
-                0x0000000008000ae0                DMAChannel7_IRQHandler
-                0x00000000080009b4                DebugMonitor
-                0x00000000080009c0                SVCHandler
-                0x0000000008000994                HardFaultException
-                0x0000000008000af8                USB_HP_CAN_TX_IRQHandler
-                0x0000000008000a5c                EXTI0_IRQHandler
-                0x0000000008000ba0                I2C2_EV_IRQHandler
-                0x0000000008000a98                DMAChannel1_IRQHandler
-                0x0000000008000bb8                SPI1_IRQHandler
-                0x0000000008000b1c                CAN_SCE_IRQHandler
-                0x0000000008000a2c                TAMPER_IRQHandler
-                0x0000000008000988                NMIException
-                0x0000000008000abc                DMAChannel4_IRQHandler
-                0x0000000008000be8                USART3_IRQHandler
-                0x0000000008000a38                RTC_IRQHandler
-                0x00000000080009d8                SysTickHandler
-                0x00000000080009cc                PendSVC
-                0x0000000008000b7c                TIM4_IRQHandler
-                0x0000000008000b10                CAN_RX1_IRQHandler
-                0x0000000008000b88                I2C1_EV_IRQHandler
-                0x0000000008000b70                TIM3_IRQHandler
-                0x0000000008000a50                RCC_IRQHandler
-                0x0000000008000b4c                TIM1_TRG_COM_IRQHandler
-                0x0000000008000bf4                EXTI15_10_IRQHandler
-                0x0000000008000aec                ADC_IRQHandler
-                0x0000000008000ac8                DMAChannel5_IRQHandler
-                0x0000000008000b28                EXTI9_5_IRQHandler
-                0x0000000008000aa4                DMAChannel2_IRQHandler
-                0x0000000008000bc4                SPI2_IRQHandler
-                0x0000000008000b04                USB_LP_CAN_RX0_IRQHandler
-                0x0000000008000a8c                EXTI4_IRQHandler
-                0x0000000008000b40                TIM1_UP_IRQHandler
-                0x0000000008000a14                WWDG_IRQHandler
-                0x0000000008000b64                TIM2_IRQHandler
-                0x0000000008000b34                TIM1_BRK_IRQHandler
-                0x0000000008000a68                EXTI1_IRQHandler
-                0x0000000008000c00                RTCAlarm_IRQHandler
-                0x0000000008000bdc                USART2_IRQHandler
-                0x0000000008000bac                I2C2_ER_IRQHandler
-                0x00000000080009ac                UsageFaultException
-                0x0000000008000a44                FLASH_IRQHandler
-                0x0000000008000ad4                DMAChannel6_IRQHandler
-                0x0000000008000ab0                DMAChannel3_IRQHandler
-                0x0000000008000bd0                USART1_IRQHandler
-                0x0000000008000b94                I2C1_ER_IRQHandler
-                0x0000000008000c0c                USBWakeUp_IRQHandler
- .text          0x0000000008000c18      0x648 lib/libstm32.a(stm32f10x_gpio.o)
-                0x0000000008001084                GPIO_EventOutputConfig
-                0x0000000008000f68                GPIO_ReadOutputDataBit
-                0x00000000080010d8                GPIO_EventOutputCmd
-                0x00000000080010f4                GPIO_PinRemapConfig
-                0x0000000008000d18                GPIO_Init
-                0x0000000008000cf8                GPIO_AFIODeInit
-                0x0000000008001024                GPIO_Write
-                0x0000000008000fa4                GPIO_ReadOutputData
-                0x0000000008000f4c                GPIO_ReadInputData
-                0x0000000008000fc0                GPIO_SetBits
-                0x0000000008000ff8                GPIO_WriteBit
-                0x0000000008000fdc                GPIO_ResetBits
-                0x00000000080011bc                GPIO_EXTILineConfig
-                0x0000000008000c18                GPIO_DeInit
-                0x0000000008000ee4                GPIO_StructInit
-                0x0000000008001040                GPIO_PinLockConfig
-                0x0000000008000f10                GPIO_ReadInputDataBit
- .text          0x0000000008001260      0x864 lib/libstm32.a(stm32f10x_rcc.o)
-                0x00000000080013e4                RCC_HSICmd
-                0x0000000008001444                RCC_PLLCmd
-                0x0000000008001aa4                RCC_ClearITPendingBit
-                0x00000000080019a4                RCC_MCOConfig
-                0x0000000008001570                RCC_ITConfig
-                0x0000000008001460                RCC_SYSCLKConfig
-                0x0000000008001344                RCC_WaitForHSEStartUp
-                0x000000000800196c                RCC_BackupResetCmd
-                0x0000000008001988                RCC_ClockSecuritySystemCmd
-                0x0000000008001a48                RCC_ClearFlag
-                0x00000000080012e4                RCC_HSEConfig
-                0x000000000800186c                RCC_APB2PeriphClockCmd
-                0x0000000008001400                RCC_PLLConfig
-                0x00000000080015d8                RCC_ADCCLKConfig
-                0x0000000008001614                RCC_LSEConfig
-                0x00000000080016a0                RCC_RTCCLKCmd
-                0x00000000080018ac                RCC_APB1PeriphClockCmd
-                0x0000000008001a64                RCC_GetITStatus
-                0x000000000800182c                RCC_AHBPeriphClockCmd
-                0x00000000080019c4                RCC_GetFlagStatus
-                0x000000000800149c                RCC_GetSYSCLKSource
-                0x00000000080016bc                RCC_GetClocksFreq
-                0x000000000800167c                RCC_RTCCLKConfig
-                0x00000000080013a4                RCC_AdjustHSICalibrationValue
-                0x00000000080014f4                RCC_PCLK1Config
-                0x00000000080015bc                RCC_USBCLKConfig
-                0x0000000008001530                RCC_PCLK2Config
-                0x0000000008001260                RCC_DeInit
-                0x000000000800192c                RCC_APB1PeriphResetCmd
-                0x0000000008001660                RCC_LSICmd
-                0x00000000080018ec                RCC_APB2PeriphResetCmd
-                0x00000000080014b8                RCC_HCLKConfig
- .text          0x0000000008001ac4     0x18e8 lib/libstm32.a(stm32f10x_tim.o)
-                0x0000000008001e88                TIM_TimeBaseStructInit
-                0x0000000008002370                TIM_ForcedOC2Config
-                0x0000000008002c78                TIM_SetCompare2
-                0x0000000008002da4                TIM_SetIC4Prescaler
-                0x00000000080024d8                TIM_OC1PreloadConfig
-                0x00000000080021bc                TIM_ETRClockMode2Config
-                0x000000000800232c                TIM_ForcedOC1Config
-                0x0000000008002018                TIM_DMACmd
-                0x0000000008002134                TIM_ETRClockMode1Config
-                0x0000000008002d60                TIM_SetIC3Prescaler
-                0x00000000080027a8                TIM_ClearOC3Ref
-                0x0000000008001f34                TIM_Cmd
-                0x00000000080025ac                TIM_OC4PreloadConfig
-                0x0000000008002f18                TIM_ClearFlag
-                0x0000000008002fac                TIM_ClearITPendingBit
-                0x0000000008002ea0                TIM_GetCounter
-                0x0000000008002e68                TIM_GetCapture3
-                0x0000000008002e30                TIM_GetCapture1
-                0x0000000008001ac4                TIM_DeInit
-                0x0000000008002ed8                TIM_GetFlagStatus
-                0x0000000008002688                TIM_OC3FastConfig
-                0x0000000008002494                TIM_SelectCCDMA
-                0x0000000008002df0                TIM_SetClockDivision
-                0x0000000008002568                TIM_OC3PreloadConfig
-                0x0000000008002c40                TIM_SetAutoreload
-                0x000000000800244c                TIM_ARRPreloadConfig
-                0x0000000008002f48                TIM_GetITStatus
-                0x00000000080025f8                TIM_OC1FastConfig
-                0x000000000800251c                TIM_OC2PreloadConfig
-                0x000000000800225c                TIM_SelectInputTrigger
-                0x0000000008001f7c                TIM_ITConfig
-                0x00000000080022a0                TIM_PrescalerConfig
-                0x0000000008002a3c                TIM_OC4PolarityConfig
-                0x0000000008002b5c                TIM_SelectOutputTrigger
-                0x0000000008002c94                TIM_SetCompare3
-                0x0000000008002ad0                TIM_SelectHallSensor
-                0x0000000008002cd0                TIM_SetIC1Prescaler
-                0x0000000008002400                TIM_ForcedOC4Config
-                0x000000000800209c                TIM_ITRxExternalClockConfig
-                0x00000000080029f0                TIM_OC3PolarityConfig
-                0x000000000800206c                TIM_InternalClockConfig
-                0x0000000008002960                TIM_OC1PolarityConfig
-                0x000000000800263c                TIM_OC2FastConfig
-                0x0000000008002c24                TIM_SetCounter
-                0x0000000008001b98                TIM_OCInit
-                0x0000000008002cb0                TIM_SetCompare4
-                0x0000000008002e4c                TIM_GetCapture2
-                0x0000000008002ebc                TIM_GetPrescaler
-                0x000000000800275c                TIM_ClearOC2Ref
-                0x0000000008001dac                TIM_ICInit
-                0x0000000008001ef0                TIM_ICStructInit
-                0x0000000008002718                TIM_ClearOC1Ref
-                0x0000000008002a88                TIM_UpdateRequestConfig
-                0x00000000080023bc                TIM_ForcedOC3Config
-                0x00000000080020cc                TIM_TIxExternalClockConfig
-                0x0000000008001ebc                TIM_OCStructInit
-                0x0000000008002be0                TIM_SelectMasterSlaveMode
-                0x0000000008002e84                TIM_GetCapture4
-                0x0000000008001b48                TIM_TimeBaseInit
-                0x0000000008001fc8                TIM_DMAConfig
-                0x0000000008002938                TIM_GenerateEvent
-                0x0000000008002d14                TIM_SetIC2Prescaler
-                0x00000000080021fc                TIM_ETRConfig
-                0x0000000008002b9c                TIM_SelectSlaveMode
-                0x00000000080027ec                TIM_ClearOC4Ref
-                0x0000000008002b18                TIM_SelectOnePulseMode
-                0x0000000008002880                TIM_EncoderInterfaceConfig
-                0x0000000008002c5c                TIM_SetCompare1
-                0x00000000080029a4                TIM_OC2PolarityConfig
-                0x0000000008002838                TIM_UpdateDisableConfig
-                0x00000000080026cc                TIM_OC4FastConfig
-                0x00000000080022e8                TIM_CounterModeConfig
- .text          0x00000000080033ac       0x7c lib/libstm32.a(stm32f10x_vector.o)
-                0x00000000080033ac                Reset_Handler
+                0x000000000800017c                systick_setup
+                0x0000000008000238                count_std_setup
+ .text          0x0000000008000278       0xb4 main.o
+                0x0000000008000278                main
+ .text          0x000000000800032c      0x2c0 lcd.o
+                0x00000000080005d4                lcdSetPos
+                0x00000000080004fc                lcdPutStr
+                0x000000000800040c                lcdInit
+                0x00000000080005b4                lcdCommand
+                0x0000000008000538                lcdPutInt
+                0x0000000008000528                lcdPutChar
+                0x0000000008000518                lcdClear
+ .text          0x00000000080005ec       0xf0 stm32f10x_it.o
+                0x0000000008000650                EXTI2_IRQHandler
+                0x00000000080005f4                MemManageException
+                0x00000000080005f8                BusFaultException
+                0x000000000800069c                TIM1_CC_IRQHandler
+                0x0000000008000634                PVD_IRQHandler
+                0x0000000008000654                EXTI3_IRQHandler
+                0x0000000008000674                DMAChannel7_IRQHandler
+                0x0000000008000600                DebugMonitor
+                0x0000000008000604                SVCHandler
+                0x00000000080005f0                HardFaultException
+                0x000000000800067c                USB_HP_CAN_TX_IRQHandler
+                0x0000000008000648                EXTI0_IRQHandler
+                0x00000000080006b4                I2C2_EV_IRQHandler
+                0x000000000800065c                DMAChannel1_IRQHandler
+                0x00000000080006bc                SPI1_IRQHandler
+                0x0000000008000688                CAN_SCE_IRQHandler
+                0x0000000008000638                TAMPER_IRQHandler
+                0x00000000080005ec                NMIException
+                0x0000000008000668                DMAChannel4_IRQHandler
+                0x00000000080006cc                USART3_IRQHandler
+                0x000000000800063c                RTC_IRQHandler
+                0x000000000800060c                SysTickHandler
+                0x0000000008000608                PendSVC
+                0x00000000080006a8                TIM4_IRQHandler
+                0x0000000008000684                CAN_RX1_IRQHandler
+                0x00000000080006ac                I2C1_EV_IRQHandler
+                0x00000000080006a4                TIM3_IRQHandler
+                0x0000000008000644                RCC_IRQHandler
+                0x0000000008000698                TIM1_TRG_COM_IRQHandler
+                0x00000000080006d0                EXTI15_10_IRQHandler
+                0x0000000008000678                ADC_IRQHandler
+                0x000000000800066c                DMAChannel5_IRQHandler
+                0x000000000800068c                EXTI9_5_IRQHandler
+                0x0000000008000660                DMAChannel2_IRQHandler
+                0x00000000080006c0                SPI2_IRQHandler
+                0x0000000008000680                USB_LP_CAN_RX0_IRQHandler
+                0x0000000008000658                EXTI4_IRQHandler
+                0x0000000008000694                TIM1_UP_IRQHandler
+                0x0000000008000630                WWDG_IRQHandler
+                0x00000000080006a0                TIM2_IRQHandler
+                0x0000000008000690                TIM1_BRK_IRQHandler
+                0x000000000800064c                EXTI1_IRQHandler
+                0x00000000080006d4                RTCAlarm_IRQHandler
+                0x00000000080006c8                USART2_IRQHandler
+                0x00000000080006b8                I2C2_ER_IRQHandler
+                0x00000000080005fc                UsageFaultException
+                0x0000000008000640                FLASH_IRQHandler
+                0x0000000008000670                DMAChannel6_IRQHandler
+                0x0000000008000664                DMAChannel3_IRQHandler
+                0x00000000080006c4                USART1_IRQHandler
+                0x00000000080006b0                I2C1_ER_IRQHandler
+                0x00000000080006d8                USBWakeUp_IRQHandler
+ .text          0x00000000080006dc       0x54 lib/libstm32.a(stm32f10x_vector.o)
+                0x00000000080006dc                Reset_Handler
  *(.text.*)
  *(.rodata)
- .rodata        0x0000000008003428       0x20 main.o
- .rodata        0x0000000008003448       0x14 lib/libstm32.a(stm32f10x_rcc.o)
- .rodata        0x000000000800345c       0x10 lib/libstm32.a(stm32f10x_tim.o)
  *(.rodata*)
+ .rodata.str1.1
+                0x0000000008000730       0x1b main.o
  *(.glue_7)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtbegin.o
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
- .glue_7        0x000000000800346c        0x0 system.o
- .glue_7        0x000000000800346c        0x0 main.o
- .glue_7        0x000000000800346c        0x0 lcd.o
- .glue_7        0x000000000800346c        0x0 stm32f10x_it.o
- .glue_7        0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_gpio.o)
- .glue_7        0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_rcc.o)
- .glue_7        0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_tim.o)
- .glue_7        0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_vector.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
- .glue_7        0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+ *fill*         0x000000000800074b        0x1 00
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtbegin.o
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
+ .glue_7        0x000000000800074c        0x0 system.o
+ .glue_7        0x000000000800074c        0x0 main.o
+ .glue_7        0x000000000800074c        0x0 lcd.o
+ .glue_7        0x000000000800074c        0x0 stm32f10x_it.o
+ .glue_7        0x000000000800074c        0x0 lib/libstm32.a(stm32f10x_vector.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
+ .glue_7        0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
  *(.glue_7t)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtbegin.o
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
- .glue_7t       0x000000000800346c        0x0 system.o
- .glue_7t       0x000000000800346c        0x0 main.o
- .glue_7t       0x000000000800346c        0x0 lcd.o
- .glue_7t       0x000000000800346c        0x0 stm32f10x_it.o
- .glue_7t       0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_gpio.o)
- .glue_7t       0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_rcc.o)
- .glue_7t       0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_tim.o)
- .glue_7t       0x000000000800346c        0x0 lib/libstm32.a(stm32f10x_vector.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
- .glue_7t       0x000000000800346c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
-                0x000000000800346c                . = ALIGN (0x4)
-                0x000000000800346c                _etext = .
-                0x000000000800346c                _sidata = _etext
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtbegin.o
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
+ .glue_7t       0x000000000800074c        0x0 system.o
+ .glue_7t       0x000000000800074c        0x0 main.o
+ .glue_7t       0x000000000800074c        0x0 lcd.o
+ .glue_7t       0x000000000800074c        0x0 stm32f10x_it.o
+ .glue_7t       0x000000000800074c        0x0 lib/libstm32.a(stm32f10x_vector.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
+ .glue_7t       0x000000000800074c        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+                0x000000000800074c                . = ALIGN (0x4)
+                0x000000000800074c                _etext = .
+                0x000000000800074c                _sidata = _etext
 
 .vfp11_veneer   0x0000000020000000        0x0
  .vfp11_veneer  0x0000000020000000        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
@@ -554,9 +411,6 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
  .vfp11_veneer  0x0000000020000000        0x0 main.o
  .vfp11_veneer  0x0000000020000000        0x0 lcd.o
  .vfp11_veneer  0x0000000020000000        0x0 stm32f10x_it.o
- .vfp11_veneer  0x0000000020000000        0x0 lib/libstm32.a(stm32f10x_gpio.o)
- .vfp11_veneer  0x0000000020000000        0x0 lib/libstm32.a(stm32f10x_rcc.o)
- .vfp11_veneer  0x0000000020000000        0x0 lib/libstm32.a(stm32f10x_tim.o)
  .vfp11_veneer  0x0000000020000000        0x0 lib/libstm32.a(stm32f10x_vector.o)
  .vfp11_veneer  0x0000000020000000        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
  .vfp11_veneer  0x0000000020000000        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
@@ -574,7 +428,7 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
  .vfp11_veneer  0x0000000020000000        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
  .vfp11_veneer  0x0000000020000000        0x0 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 
-.data           0x0000000020000000        0x0 load address 0x000000000800346c
+.data           0x0000000020000000        0x0 load address 0x000000000800074c
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sdata = .
  *(.data)
@@ -582,30 +436,26 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _edata = .
 
-.bss            0x0000000020000000       0x24
+.bss            0x0000000020000000        0x8
                 0x0000000020000000                . = ALIGN (0x4)
                 0x0000000020000000                _sbss = .
  *(.bss)
  .bss           0x0000000020000000        0x8 stm32f10x_it.o
                 0x0000000020000000                Tim
                 0x0000000020000004                Tim1
- .bss           0x0000000020000008        0x8 lib/libstm32.a(stm32f10x_rcc.o)
  *(COMMON)
- COMMON         0x0000000020000010       0x14 main.o
-                0x0000000020000010                TIM_OCInitStructure
-                0x0000000020000018                GPIO_InitStructure
-                0x0000000020000024                . = ALIGN (0x4)
-                0x0000000020000024                _ebss = .
-                0x0000000020000024                PROVIDE (end, _ebss)
-                0x0000000020000024                PROVIDE (_end, _ebss)
+                0x0000000020000008                . = ALIGN (0x4)
+                0x0000000020000008                _ebss = .
+                0x0000000020000008                PROVIDE (end, _ebss)
+                0x0000000020000008                PROVIDE (_end, _ebss)
 
-._usrstack      0x0000000020000024      0x100
-                0x0000000020000024                . = ALIGN (0x4)
-                0x0000000020000024                _susrstack = .
-                0x0000000020000124                . = (. + _Minimum_Stack_Size)
- *fill*         0x0000000020000024      0x100 00
-                0x0000000020000124                . = ALIGN (0x4)
-                0x0000000020000124                _eusrstack = .
+._usrstack      0x0000000020000008      0x100
+                0x0000000020000008                . = ALIGN (0x4)
+                0x0000000020000008                _susrstack = .
+                0x0000000020000108                . = (. + _Minimum_Stack_Size)
+ *fill*         0x0000000020000008      0x100 00
+                0x0000000020000108                . = ALIGN (0x4)
+                0x0000000020000108                _eusrstack = .
 
 .b1text
  *(.b1text)
@@ -631,8 +481,8 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
  *(.eb3text)
  *(.eb3rodata)
  *(.eb3rodata*)
-                0x0000000020000124                __exidx_start = .
-                0x0000000020000124                __exidx_end = .
+                0x0000000020000108                __exidx_start = .
+                0x0000000020000108                __exidx_end = .
 
 /DISCARD/
  libc.a(*)
@@ -657,31 +507,28 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 .stab.indexstr
  *(.stab.indexstr)
 
-.comment        0x0000000000000000      0x19e
+.comment        0x0000000000000000      0x168
  *(.comment)
  .comment       0x0000000000000000       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtbegin.o
  .comment       0x0000000000000012       0x12 system.o
  .comment       0x0000000000000024       0x12 main.o
  .comment       0x0000000000000036       0x12 lcd.o
  .comment       0x0000000000000048       0x12 stm32f10x_it.o
- .comment       0x000000000000005a       0x12 lib/libstm32.a(stm32f10x_gpio.o)
- .comment       0x000000000000006c       0x12 lib/libstm32.a(stm32f10x_rcc.o)
- .comment       0x000000000000007e       0x12 lib/libstm32.a(stm32f10x_tim.o)
- .comment       0x0000000000000090       0x12 lib/libstm32.a(stm32f10x_vector.o)
- .comment       0x00000000000000a2       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .comment       0x00000000000000b4       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .comment       0x00000000000000c6       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
- .comment       0x00000000000000d8       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .comment       0x00000000000000ea       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .comment       0x00000000000000fc       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .comment       0x000000000000010e       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .comment       0x0000000000000120       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .comment       0x0000000000000132       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .comment       0x0000000000000144       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .comment       0x0000000000000156       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .comment       0x0000000000000168       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .comment       0x000000000000017a       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .comment       0x000000000000018c       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
+ .comment       0x000000000000005a       0x12 lib/libstm32.a(stm32f10x_vector.o)
+ .comment       0x000000000000006c       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .comment       0x000000000000007e       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .comment       0x0000000000000090       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+ .comment       0x00000000000000a2       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .comment       0x00000000000000b4       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .comment       0x00000000000000c6       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .comment       0x00000000000000d8       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .comment       0x00000000000000ea       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .comment       0x00000000000000fc       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .comment       0x000000000000010e       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .comment       0x0000000000000120       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .comment       0x0000000000000132       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .comment       0x0000000000000144       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .comment       0x0000000000000156       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
 
 .debug
  *(.debug)
@@ -695,7 +542,7 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x0000000000000000      0x2f0
+.debug_aranges  0x0000000000000000      0x290
  *(.debug_aranges)
  .debug_aranges
                 0x0000000000000000       0x28 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
@@ -710,256 +557,221 @@ LOAD /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
  .debug_aranges
                 0x00000000000000a8       0x20 stm32f10x_it.o
  .debug_aranges
-                0x00000000000000c8       0x20 lib/libstm32.a(stm32f10x_gpio.o)
+                0x00000000000000c8       0x20 lib/libstm32.a(stm32f10x_vector.o)
  .debug_aranges
-                0x00000000000000e8       0x20 lib/libstm32.a(stm32f10x_rcc.o)
+                0x00000000000000e8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
  .debug_aranges
-                0x0000000000000108       0x20 lib/libstm32.a(stm32f10x_tim.o)
+                0x0000000000000108       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
  .debug_aranges
-                0x0000000000000128       0x20 lib/libstm32.a(stm32f10x_vector.o)
+                0x0000000000000128       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
  .debug_aranges
-                0x0000000000000148       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+                0x0000000000000148       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
  .debug_aranges
-                0x0000000000000168       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+                0x0000000000000168       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
  .debug_aranges
-                0x0000000000000188       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+                0x0000000000000188       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
  .debug_aranges
-                0x00000000000001a8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+                0x00000000000001a8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
  .debug_aranges
-                0x00000000000001c8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+                0x00000000000001c8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
  .debug_aranges
-                0x00000000000001e8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+                0x00000000000001e8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
  .debug_aranges
-                0x0000000000000208       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+                0x0000000000000208       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
  .debug_aranges
-                0x0000000000000228       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+                0x0000000000000228       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
  .debug_aranges
-                0x0000000000000248       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+                0x0000000000000248       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
  .debug_aranges
-                0x0000000000000268       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .debug_aranges
-                0x0000000000000288       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .debug_aranges
-                0x00000000000002a8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .debug_aranges
-                0x00000000000002c8       0x28 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+                0x0000000000000268       0x28 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 
 .debug_pubnames
-                0x0000000000000000     0x138d
+                0x0000000000000000      0x8b6
  *(.debug_pubnames)
  .debug_pubnames
-                0x0000000000000000       0x47 system.o
+                0x0000000000000000       0x5b system.o
  .debug_pubnames
-                0x0000000000000047       0x4a main.o
+                0x000000000000005b       0x1b main.o
  .debug_pubnames
-                0x0000000000000091       0x73 lcd.o
+                0x0000000000000076       0x73 lcd.o
  .debug_pubnames
-                0x0000000000000104      0x4ae stm32f10x_it.o
+                0x00000000000000e9      0x4ae stm32f10x_it.o
  .debug_pubnames
-                0x00000000000005b2      0x17b lib/libstm32.a(stm32f10x_gpio.o)
+                0x0000000000000597       0x35 lib/libstm32.a(stm32f10x_vector.o)
  .debug_pubnames
-                0x000000000000072d      0x2c4 lib/libstm32.a(stm32f10x_rcc.o)
+                0x00000000000005cc       0x1d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
  .debug_pubnames
-                0x00000000000009f1      0x67d lib/libstm32.a(stm32f10x_tim.o)
+                0x00000000000005e9       0x1b /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
  .debug_pubnames
-                0x000000000000106e       0x35 lib/libstm32.a(stm32f10x_vector.o)
+                0x0000000000000604       0x39 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
  .debug_pubnames
-                0x00000000000010a3       0x1d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+                0x000000000000063d       0x3e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
  .debug_pubnames
-                0x00000000000010c0       0x1b /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+                0x000000000000067b       0x1d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
  .debug_pubnames
-                0x00000000000010db       0x39 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+                0x0000000000000698       0x2a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
  .debug_pubnames
-                0x0000000000001114       0x3e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+                0x00000000000006c2       0x27 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
  .debug_pubnames
-                0x0000000000001152       0x1d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+                0x00000000000006e9       0x26 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
  .debug_pubnames
-                0x000000000000116f       0x2a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+                0x000000000000070f       0xce /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
  .debug_pubnames
-                0x0000000000001199       0x27 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+                0x00000000000007dd       0x38 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
  .debug_pubnames
-                0x00000000000011c0       0x26 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+                0x0000000000000815       0x1e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
  .debug_pubnames
-                0x00000000000011e6       0xce /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+                0x0000000000000833       0x31 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
  .debug_pubnames
-                0x00000000000012b4       0x38 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .debug_pubnames
-                0x00000000000012ec       0x1e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .debug_pubnames
-                0x000000000000130a       0x31 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .debug_pubnames
-                0x000000000000133b       0x52 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+                0x0000000000000864       0x52 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
 
-.debug_info     0x0000000000000000     0xa62e
+.debug_info     0x0000000000000000     0x7ff5
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x0000000000000000       0x6b /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
  .debug_info    0x000000000000006b       0xcf /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
- .debug_info    0x000000000000013a      0x570 system.o
- .debug_info    0x00000000000006aa      0x48a main.o
- .debug_info    0x0000000000000b34      0x472 lcd.o
- .debug_info    0x0000000000000fa6      0x4e9 stm32f10x_it.o
- .debug_info    0x000000000000148f      0x670 lib/libstm32.a(stm32f10x_gpio.o)
- .debug_info    0x0000000000001aff      0x88d lib/libstm32.a(stm32f10x_rcc.o)
- .debug_info    0x000000000000238c     0x19b7 lib/libstm32.a(stm32f10x_tim.o)
- .debug_info    0x0000000000003d43       0xe5 lib/libstm32.a(stm32f10x_vector.o)
- .debug_info    0x0000000000003e28       0xc1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .debug_info    0x0000000000003ee9      0x937 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .debug_info    0x0000000000004820      0x935 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
- .debug_info    0x0000000000005155      0x14a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .debug_info    0x000000000000529f      0x111 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .debug_info    0x00000000000053b0      0x9a2 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .debug_info    0x0000000000005d52      0x9b7 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .debug_info    0x0000000000006709      0x96a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .debug_info    0x0000000000007073      0xcc8 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .debug_info    0x0000000000007d3b      0x94f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .debug_info    0x000000000000868a      0x95e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .debug_info    0x0000000000008fe8      0xbc1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .debug_info    0x0000000000009ba9      0xa1a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .debug_info    0x000000000000a5c3       0x6b /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+ .debug_info    0x000000000000013a      0x5e6 system.o
+ .debug_info    0x0000000000000720      0x2ec main.o
+ .debug_info    0x0000000000000a0c      0x87f lcd.o
+ .debug_info    0x000000000000128b      0x481 stm32f10x_it.o
+ .debug_info    0x000000000000170c       0xe3 lib/libstm32.a(stm32f10x_vector.o)
+ .debug_info    0x00000000000017ef       0xc1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .debug_info    0x00000000000018b0      0x937 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .debug_info    0x00000000000021e7      0x935 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+ .debug_info    0x0000000000002b1c      0x14a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .debug_info    0x0000000000002c66      0x111 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .debug_info    0x0000000000002d77      0x9a2 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .debug_info    0x0000000000003719      0x9b7 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .debug_info    0x00000000000040d0      0x96a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .debug_info    0x0000000000004a3a      0xcc8 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .debug_info    0x0000000000005702      0x94f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .debug_info    0x0000000000006051      0x95e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .debug_info    0x00000000000069af      0xbc1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .debug_info    0x0000000000007570      0xa1a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .debug_info    0x0000000000007f8a       0x6b /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 
-.debug_abbrev   0x0000000000000000     0x1cbd
+.debug_abbrev   0x0000000000000000     0x184b
  *(.debug_abbrev)
  .debug_abbrev  0x0000000000000000       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
  .debug_abbrev  0x0000000000000012       0x14 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
  .debug_abbrev  0x0000000000000026      0x109 system.o
- .debug_abbrev  0x000000000000012f      0x11c main.o
- .debug_abbrev  0x000000000000024b      0x1da lcd.o
- .debug_abbrev  0x0000000000000425       0x86 stm32f10x_it.o
- .debug_abbrev  0x00000000000004ab      0x189 lib/libstm32.a(stm32f10x_gpio.o)
- .debug_abbrev  0x0000000000000634      0x1bb lib/libstm32.a(stm32f10x_rcc.o)
- .debug_abbrev  0x00000000000007ef      0x185 lib/libstm32.a(stm32f10x_tim.o)
- .debug_abbrev  0x0000000000000974       0xa8 lib/libstm32.a(stm32f10x_vector.o)
- .debug_abbrev  0x0000000000000a1c       0x7f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .debug_abbrev  0x0000000000000a9b      0x175 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .debug_abbrev  0x0000000000000c10      0x15e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
- .debug_abbrev  0x0000000000000d6e       0xa2 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .debug_abbrev  0x0000000000000e10       0xa1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .debug_abbrev  0x0000000000000eb1      0x1ba /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .debug_abbrev  0x000000000000106b      0x1ce /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .debug_abbrev  0x0000000000001239      0x18e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .debug_abbrev  0x00000000000013c7      0x21d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .debug_abbrev  0x00000000000015e4      0x171 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .debug_abbrev  0x0000000000001755      0x195 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .debug_abbrev  0x00000000000018ea      0x1e0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .debug_abbrev  0x0000000000001aca      0x1e1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .debug_abbrev  0x0000000000001cab       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+ .debug_abbrev  0x000000000000012f       0xbd main.o
+ .debug_abbrev  0x00000000000001ec      0x283 lcd.o
+ .debug_abbrev  0x000000000000046f       0x86 stm32f10x_it.o
+ .debug_abbrev  0x00000000000004f5       0xb5 lib/libstm32.a(stm32f10x_vector.o)
+ .debug_abbrev  0x00000000000005aa       0x7f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .debug_abbrev  0x0000000000000629      0x175 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .debug_abbrev  0x000000000000079e      0x15e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+ .debug_abbrev  0x00000000000008fc       0xa2 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .debug_abbrev  0x000000000000099e       0xa1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .debug_abbrev  0x0000000000000a3f      0x1ba /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .debug_abbrev  0x0000000000000bf9      0x1ce /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .debug_abbrev  0x0000000000000dc7      0x18e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .debug_abbrev  0x0000000000000f55      0x21d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .debug_abbrev  0x0000000000001172      0x171 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .debug_abbrev  0x00000000000012e3      0x195 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .debug_abbrev  0x0000000000001478      0x1e0 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .debug_abbrev  0x0000000000001658      0x1e1 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .debug_abbrev  0x0000000000001839       0x12 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 
-.debug_line     0x0000000000000000     0x1c33
+.debug_line     0x0000000000000000     0x1657
  *(.debug_line)
  .debug_line    0x0000000000000000       0x49 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
  .debug_line    0x0000000000000049       0xc3 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
- .debug_line    0x000000000000010c       0x87 system.o
- .debug_line    0x0000000000000193       0xb2 main.o
- .debug_line    0x0000000000000245      0x142 lcd.o
- .debug_line    0x0000000000000387      0x109 stm32f10x_it.o
- .debug_line    0x0000000000000490      0x140 lib/libstm32.a(stm32f10x_gpio.o)
- .debug_line    0x00000000000005d0      0x194 lib/libstm32.a(stm32f10x_rcc.o)
- .debug_line    0x0000000000000764      0x34f lib/libstm32.a(stm32f10x_tim.o)
- .debug_line    0x0000000000000ab3       0x53 lib/libstm32.a(stm32f10x_vector.o)
- .debug_line    0x0000000000000b06       0x94 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .debug_line    0x0000000000000b9a      0x131 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .debug_line    0x0000000000000ccb      0x11d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
- .debug_line    0x0000000000000de8       0xcf /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .debug_line    0x0000000000000eb7       0xee /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .debug_line    0x0000000000000fa5      0x16c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .debug_line    0x0000000000001111      0x195 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .debug_line    0x00000000000012a6      0x139 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .debug_line    0x00000000000013df      0x278 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .debug_line    0x0000000000001657      0x12f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .debug_line    0x0000000000001786      0x132 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .debug_line    0x00000000000018b8      0x197 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .debug_line    0x0000000000001a4f      0x168 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .debug_line    0x0000000000001bb7       0x7c /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+ .debug_line    0x000000000000010c       0x96 system.o
+ .debug_line    0x00000000000001a2       0x83 main.o
+ .debug_line    0x0000000000000225      0x1d8 lcd.o
+ .debug_line    0x00000000000003fd       0xd9 stm32f10x_it.o
+ .debug_line    0x00000000000004d6       0x54 lib/libstm32.a(stm32f10x_vector.o)
+ .debug_line    0x000000000000052a       0x94 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .debug_line    0x00000000000005be      0x131 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .debug_line    0x00000000000006ef      0x11d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+ .debug_line    0x000000000000080c       0xcf /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .debug_line    0x00000000000008db       0xee /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .debug_line    0x00000000000009c9      0x16c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .debug_line    0x0000000000000b35      0x195 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .debug_line    0x0000000000000cca      0x139 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .debug_line    0x0000000000000e03      0x278 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .debug_line    0x000000000000107b      0x12f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .debug_line    0x00000000000011aa      0x132 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .debug_line    0x00000000000012dc      0x197 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .debug_line    0x0000000000001473      0x168 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .debug_line    0x00000000000015db       0x7c /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 
-.debug_frame    0x0000000000000000     0x188c
+.debug_frame    0x0000000000000000      0x7ac
  *(.debug_frame)
- .debug_frame   0x0000000000000000       0x64 system.o
- .debug_frame   0x0000000000000064       0x2c main.o
- .debug_frame   0x0000000000000090      0x200 lcd.o
- .debug_frame   0x0000000000000290      0x4f0 stm32f10x_it.o
- .debug_frame   0x0000000000000780      0x1f0 lib/libstm32.a(stm32f10x_gpio.o)
- .debug_frame   0x0000000000000970      0x388 lib/libstm32.a(stm32f10x_rcc.o)
- .debug_frame   0x0000000000000cf8      0x898 lib/libstm32.a(stm32f10x_tim.o)
- .debug_frame   0x0000000000001590       0x34 lib/libstm32.a(stm32f10x_vector.o)
- .debug_frame   0x00000000000015c4       0x28 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .debug_frame   0x00000000000015ec       0x28 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .debug_frame   0x0000000000001614       0x48 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .debug_frame   0x000000000000165c       0x2c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .debug_frame   0x0000000000001688       0x34 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .debug_frame   0x00000000000016bc       0x3c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .debug_frame   0x00000000000016f8       0x40 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .debug_frame   0x0000000000001738       0x3c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .debug_frame   0x0000000000001774       0x30 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
- .debug_frame   0x00000000000017a4       0x2c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .debug_frame   0x00000000000017d0       0x54 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .debug_frame   0x0000000000001824       0x68 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .debug_frame   0x0000000000000000       0x50 system.o
+ .debug_frame   0x0000000000000050       0x2c main.o
+ .debug_frame   0x000000000000007c       0xec lcd.o
+ .debug_frame   0x0000000000000168      0x350 stm32f10x_it.o
+ .debug_frame   0x00000000000004b8       0x2c lib/libstm32.a(stm32f10x_vector.o)
+ .debug_frame   0x00000000000004e4       0x28 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .debug_frame   0x000000000000050c       0x28 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .debug_frame   0x0000000000000534       0x48 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .debug_frame   0x000000000000057c       0x2c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .debug_frame   0x00000000000005a8       0x34 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .debug_frame   0x00000000000005dc       0x3c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .debug_frame   0x0000000000000618       0x40 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .debug_frame   0x0000000000000658       0x3c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .debug_frame   0x0000000000000694       0x30 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .debug_frame   0x00000000000006c4       0x2c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .debug_frame   0x00000000000006f0       0x54 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .debug_frame   0x0000000000000744       0x68 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
 
-.debug_str      0x0000000000000000     0x2331
+.debug_str      0x0000000000000000     0x12bc
  *(.debug_str)
- .debug_str     0x0000000000000000      0x21b system.o
-                                        0x24e (size before relaxing)
- .debug_str     0x000000000000021b      0x1be main.o
-                                        0x342 (size before relaxing)
- .debug_str     0x00000000000003d9       0xf1 lcd.o
+ .debug_str     0x0000000000000000      0x232 system.o
+                                        0x25e (size before relaxing)
+ .debug_str     0x0000000000000232       0x36 main.o
+                                        0x1b0 (size before relaxing)
+ .debug_str     0x0000000000000268       0xd2 lcd.o
                                         0x1c3 (size before relaxing)
- .debug_str     0x00000000000004ca      0x3ca stm32f10x_it.o
+ .debug_str     0x000000000000033a      0x3ca stm32f10x_it.o
                                         0x44c (size before relaxing)
- .debug_str     0x0000000000000894      0x224 lib/libstm32.a(stm32f10x_gpio.o)
-                                        0x3c0 (size before relaxing)
- .debug_str     0x0000000000000ab8      0x3f4 lib/libstm32.a(stm32f10x_rcc.o)
-                                        0x50b (size before relaxing)
- .debug_str     0x0000000000000eac      0x8cd lib/libstm32.a(stm32f10x_tim.o)
-                                        0xb32 (size before relaxing)
- .debug_str     0x0000000000001779       0x6f lib/libstm32.a(stm32f10x_vector.o)
+ .debug_str     0x0000000000000704       0x6f lib/libstm32.a(stm32f10x_vector.o)
                                          0xac (size before relaxing)
- .debug_str     0x00000000000017e8       0x86 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .debug_str     0x0000000000000773       0x86 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
                                         0x122 (size before relaxing)
- .debug_str     0x000000000000186e      0x3ce /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .debug_str     0x00000000000007f9      0x3ce /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
                                         0x49b (size before relaxing)
- .debug_str     0x0000000000001c3c       0x61 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+ .debug_str     0x0000000000000bc7       0x61 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
                                         0x4aa (size before relaxing)
- .debug_str     0x0000000000001c9d       0xef /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .debug_str     0x0000000000000c28       0xef /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
                                         0x18a (size before relaxing)
- .debug_str     0x0000000000001d8c       0x71 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .debug_str     0x0000000000000d17       0x71 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
                                         0x10d (size before relaxing)
- .debug_str     0x0000000000001dfd       0x71 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .debug_str     0x0000000000000d88       0x71 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
                                         0x4e3 (size before relaxing)
- .debug_str     0x0000000000001e6e       0x7c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .debug_str     0x0000000000000df9       0x7c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
                                         0x4c3 (size before relaxing)
- .debug_str     0x0000000000001eea       0x67 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .debug_str     0x0000000000000e75       0x67 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
                                         0x4ab (size before relaxing)
- .debug_str     0x0000000000001f51      0x223 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .debug_str     0x0000000000000edc      0x223 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
                                         0x680 (size before relaxing)
- .debug_str     0x0000000000002174       0x88 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+ .debug_str     0x00000000000010ff       0x88 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
                                         0x4b2 (size before relaxing)
- .debug_str     0x00000000000021fc       0x6b /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .debug_str     0x0000000000001187       0x6b /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
                                         0x49b (size before relaxing)
- .debug_str     0x0000000000002267       0x3c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .debug_str     0x00000000000011f2       0x3c /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
                                         0x5d2 (size before relaxing)
- .debug_str     0x00000000000022a3       0x8e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .debug_str     0x000000000000122e       0x8e /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
                                         0x4cf (size before relaxing)
 
-.debug_loc      0x0000000000000000     0x3c06
+.debug_loc      0x0000000000000000     0x16bf
  *(.debug_loc)
- .debug_loc     0x0000000000000000       0xa5 system.o
- .debug_loc     0x00000000000000a5       0x2b main.o
- .debug_loc     0x00000000000000d0      0x377 lcd.o
- .debug_loc     0x0000000000000447      0x8bc stm32f10x_it.o
- .debug_loc     0x0000000000000d03      0x39b lib/libstm32.a(stm32f10x_gpio.o)
- .debug_loc     0x000000000000109e      0x6bc lib/libstm32.a(stm32f10x_rcc.o)
- .debug_loc     0x000000000000175a     0x108b lib/libstm32.a(stm32f10x_tim.o)
- .debug_loc     0x00000000000027e5       0x37 lib/libstm32.a(stm32f10x_vector.o)
- .debug_loc     0x000000000000281c       0x3d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
- .debug_loc     0x0000000000002859       0x3d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
- .debug_loc     0x0000000000002896       0x8a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
- .debug_loc     0x0000000000002920      0x128 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
- .debug_loc     0x0000000000002a48      0x103 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
- .debug_loc     0x0000000000002b4b      0x159 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .debug_loc     0x0000000000002ca4       0x7a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
- .debug_loc     0x0000000000002d1e      0x909 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .debug_loc     0x0000000000003627       0x79 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
- .debug_loc     0x00000000000036a0      0x37f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .debug_loc     0x0000000000003a1f      0x1e7 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+ .debug_loc     0x0000000000000000       0x1f main.o
+ .debug_loc     0x000000000000001f      0x284 lcd.o
+ .debug_loc     0x00000000000002a3       0x32 lib/libstm32.a(stm32f10x_vector.o)
+ .debug_loc     0x00000000000002d5       0x3d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+ .debug_loc     0x0000000000000312       0x3d /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+ .debug_loc     0x000000000000034f       0x8a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+ .debug_loc     0x00000000000003d9      0x128 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+ .debug_loc     0x0000000000000501      0x103 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+ .debug_loc     0x0000000000000604      0x159 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .debug_loc     0x000000000000075d       0x7a /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+ .debug_loc     0x00000000000007d7      0x909 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .debug_loc     0x00000000000010e0       0x79 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+ .debug_loc     0x0000000000001159      0x37f /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
+ .debug_loc     0x00000000000014d8      0x1e7 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -994,49 +806,44 @@ OUTPUT(main.elf elf32-littlearm)
  .ARM.attributes
                 0x0000000000000060       0x10 stm32f10x_it.o
  .ARM.attributes
-                0x0000000000000070       0x10 lib/libstm32.a(stm32f10x_gpio.o)
+                0x0000000000000070       0x10 lib/libstm32.a(stm32f10x_vector.o)
  .ARM.attributes
-                0x0000000000000080       0x10 lib/libstm32.a(stm32f10x_rcc.o)
+                0x0000000000000080       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
  .ARM.attributes
-                0x0000000000000090       0x10 lib/libstm32.a(stm32f10x_tim.o)
+                0x0000000000000090       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
  .ARM.attributes
-                0x00000000000000a0       0x10 lib/libstm32.a(stm32f10x_vector.o)
+                0x00000000000000a0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
  .ARM.attributes
-                0x00000000000000b0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-atexit.o)
+                0x00000000000000b0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
  .ARM.attributes
-                0x00000000000000c0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
+                0x00000000000000c0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
  .ARM.attributes
-                0x00000000000000d0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-impure.o)
+                0x00000000000000d0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
  .ARM.attributes
-                0x00000000000000e0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-init.o)
+                0x00000000000000e0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
  .ARM.attributes
-                0x00000000000000f0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-memset.o)
+                0x00000000000000f0       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
  .ARM.attributes
-                0x0000000000000100       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__atexit.o)
+                0x0000000000000100       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
  .ARM.attributes
-                0x0000000000000110       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+                0x0000000000000110       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
  .ARM.attributes
-                0x0000000000000120       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-malloc.o)
+                0x0000000000000120       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
  .ARM.attributes
-                0x0000000000000130       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+                0x0000000000000130       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
  .ARM.attributes
-                0x0000000000000140       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mlock.o)
+                0x0000000000000140       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
  .ARM.attributes
-                0x0000000000000150       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
+                0x0000000000000150       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
  .ARM.attributes
-                0x0000000000000160       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-freer.o)
- .ARM.attributes
-                0x0000000000000170       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
- .ARM.attributes
-                0x0000000000000180       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtend.o
- .ARM.attributes
-                0x0000000000000190       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+                0x0000000000000160       0x10 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 
-.debug_ranges   0x0000000000000000       0xf8
+.debug_ranges   0x0000000000000000      0x228
  .debug_ranges  0x0000000000000000       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crti.o
- .debug_ranges  0x0000000000000020       0x48 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
- .debug_ranges  0x0000000000000068       0x70 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
- .debug_ranges  0x00000000000000d8       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
+ .debug_ranges  0x0000000000000020      0x130 lcd.o
+ .debug_ranges  0x0000000000000150       0x48 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-__call_atexit.o)
+ .debug_ranges  0x0000000000000198       0x70 /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-mallocr.o)
+ .debug_ranges  0x0000000000000208       0x20 /usr/local/lib/gcc/arm-elf/4.3.0/thumb/crtn.o
 
 Cross Reference Table
 
@@ -1081,25 +888,6 @@ EXTI9_5_IRQHandler                                stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
 FLASH_IRQHandler                                  stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
-GPIO_AFIODeInit                                   lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_DeInit                                       lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_EXTILineConfig                               lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_EventOutputCmd                               lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_EventOutputConfig                            lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_Init                                         lib/libstm32.a(stm32f10x_gpio.o)
-                                                  main.o
-GPIO_InitStructure                                main.o
-GPIO_PinLockConfig                                lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_PinRemapConfig                               lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_ReadInputData                                lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_ReadInputDataBit                             lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_ReadOutputData                               lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_ReadOutputDataBit                            lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_ResetBits                                    lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_SetBits                                      lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_StructInit                                   lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_Write                                        lib/libstm32.a(stm32f10x_gpio.o)
-GPIO_WriteBit                                     lib/libstm32.a(stm32f10x_gpio.o)
 HardFaultException                                stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
 I2C1_ER_IRQHandler                                stm32f10x_it.o
@@ -1118,44 +906,8 @@ PVD_IRQHandler                                    stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
 PendSVC                                           stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
-RCC_ADCCLKConfig                                  lib/libstm32.a(stm32f10x_rcc.o)
-RCC_AHBPeriphClockCmd                             lib/libstm32.a(stm32f10x_rcc.o)
-RCC_APB1PeriphClockCmd                            lib/libstm32.a(stm32f10x_rcc.o)
-                                                  main.o
-RCC_APB1PeriphResetCmd                            lib/libstm32.a(stm32f10x_rcc.o)
-                                                  lib/libstm32.a(stm32f10x_tim.o)
-RCC_APB2PeriphClockCmd                            lib/libstm32.a(stm32f10x_rcc.o)
-                                                  main.o
-RCC_APB2PeriphResetCmd                            lib/libstm32.a(stm32f10x_rcc.o)
-                                                  lib/libstm32.a(stm32f10x_gpio.o)
-RCC_AdjustHSICalibrationValue                     lib/libstm32.a(stm32f10x_rcc.o)
-RCC_BackupResetCmd                                lib/libstm32.a(stm32f10x_rcc.o)
-RCC_ClearFlag                                     lib/libstm32.a(stm32f10x_rcc.o)
-RCC_ClearITPendingBit                             lib/libstm32.a(stm32f10x_rcc.o)
-RCC_ClockSecuritySystemCmd                        lib/libstm32.a(stm32f10x_rcc.o)
-RCC_DeInit                                        lib/libstm32.a(stm32f10x_rcc.o)
-RCC_GetClocksFreq                                 lib/libstm32.a(stm32f10x_rcc.o)
-RCC_GetFlagStatus                                 lib/libstm32.a(stm32f10x_rcc.o)
-RCC_GetITStatus                                   lib/libstm32.a(stm32f10x_rcc.o)
-RCC_GetSYSCLKSource                               lib/libstm32.a(stm32f10x_rcc.o)
-RCC_HCLKConfig                                    lib/libstm32.a(stm32f10x_rcc.o)
-RCC_HSEConfig                                     lib/libstm32.a(stm32f10x_rcc.o)
-RCC_HSICmd                                        lib/libstm32.a(stm32f10x_rcc.o)
 RCC_IRQHandler                                    stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
-RCC_ITConfig                                      lib/libstm32.a(stm32f10x_rcc.o)
-RCC_LSEConfig                                     lib/libstm32.a(stm32f10x_rcc.o)
-RCC_LSICmd                                        lib/libstm32.a(stm32f10x_rcc.o)
-RCC_MCOConfig                                     lib/libstm32.a(stm32f10x_rcc.o)
-RCC_PCLK1Config                                   lib/libstm32.a(stm32f10x_rcc.o)
-RCC_PCLK2Config                                   lib/libstm32.a(stm32f10x_rcc.o)
-RCC_PLLCmd                                        lib/libstm32.a(stm32f10x_rcc.o)
-RCC_PLLConfig                                     lib/libstm32.a(stm32f10x_rcc.o)
-RCC_RTCCLKCmd                                     lib/libstm32.a(stm32f10x_rcc.o)
-RCC_RTCCLKConfig                                  lib/libstm32.a(stm32f10x_rcc.o)
-RCC_SYSCLKConfig                                  lib/libstm32.a(stm32f10x_rcc.o)
-RCC_USBCLKConfig                                  lib/libstm32.a(stm32f10x_rcc.o)
-RCC_WaitForHSEStartUp                             lib/libstm32.a(stm32f10x_rcc.o)
 RTCAlarm_IRQHandler                               stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
 RTC_IRQHandler                                    stm32f10x_it.o
@@ -1185,80 +937,6 @@ TIM3_IRQHandler                                   stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
 TIM4_IRQHandler                                   stm32f10x_it.o
                                                   lib/libstm32.a(stm32f10x_vector.o)
-TIM_ARRPreloadConfig                              lib/libstm32.a(stm32f10x_tim.o)
-TIM_ClearFlag                                     lib/libstm32.a(stm32f10x_tim.o)
-TIM_ClearITPendingBit                             lib/libstm32.a(stm32f10x_tim.o)
-TIM_ClearOC1Ref                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_ClearOC2Ref                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_ClearOC3Ref                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_ClearOC4Ref                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_Cmd                                           lib/libstm32.a(stm32f10x_tim.o)
-                                                  main.o
-TIM_CounterModeConfig                             lib/libstm32.a(stm32f10x_tim.o)
-TIM_DMACmd                                        lib/libstm32.a(stm32f10x_tim.o)
-TIM_DMAConfig                                     lib/libstm32.a(stm32f10x_tim.o)
-TIM_DeInit                                        lib/libstm32.a(stm32f10x_tim.o)
-TIM_ETRClockMode1Config                           lib/libstm32.a(stm32f10x_tim.o)
-TIM_ETRClockMode2Config                           lib/libstm32.a(stm32f10x_tim.o)
-TIM_ETRConfig                                     lib/libstm32.a(stm32f10x_tim.o)
-TIM_EncoderInterfaceConfig                        lib/libstm32.a(stm32f10x_tim.o)
-TIM_ForcedOC1Config                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_ForcedOC2Config                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_ForcedOC3Config                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_ForcedOC4Config                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_GenerateEvent                                 lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetCapture1                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetCapture2                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetCapture3                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetCapture4                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetCounter                                    lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetFlagStatus                                 lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetITStatus                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_GetPrescaler                                  lib/libstm32.a(stm32f10x_tim.o)
-TIM_ICInit                                        lib/libstm32.a(stm32f10x_tim.o)
-TIM_ICStructInit                                  lib/libstm32.a(stm32f10x_tim.o)
-TIM_ITConfig                                      lib/libstm32.a(stm32f10x_tim.o)
-TIM_ITRxExternalClockConfig                       lib/libstm32.a(stm32f10x_tim.o)
-TIM_InternalClockConfig                           lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC1FastConfig                                 lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC1PolarityConfig                             lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC1PreloadConfig                              lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC2FastConfig                                 lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC2PolarityConfig                             lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC2PreloadConfig                              lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC3FastConfig                                 lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC3PolarityConfig                             lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC3PreloadConfig                              lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC4FastConfig                                 lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC4PolarityConfig                             lib/libstm32.a(stm32f10x_tim.o)
-TIM_OC4PreloadConfig                              lib/libstm32.a(stm32f10x_tim.o)
-TIM_OCInit                                        lib/libstm32.a(stm32f10x_tim.o)
-TIM_OCInitStructure                               main.o
-TIM_OCStructInit                                  lib/libstm32.a(stm32f10x_tim.o)
-TIM_PrescalerConfig                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_SelectCCDMA                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_SelectHallSensor                              lib/libstm32.a(stm32f10x_tim.o)
-TIM_SelectInputTrigger                            lib/libstm32.a(stm32f10x_tim.o)
-TIM_SelectMasterSlaveMode                         lib/libstm32.a(stm32f10x_tim.o)
-TIM_SelectOnePulseMode                            lib/libstm32.a(stm32f10x_tim.o)
-TIM_SelectOutputTrigger                           lib/libstm32.a(stm32f10x_tim.o)
-TIM_SelectSlaveMode                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetAutoreload                                 lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetClockDivision                              lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetCompare1                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetCompare2                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetCompare3                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetCompare4                                   lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetCounter                                    lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetIC1Prescaler                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetIC2Prescaler                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetIC3Prescaler                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_SetIC4Prescaler                               lib/libstm32.a(stm32f10x_tim.o)
-TIM_TIxExternalClockConfig                        lib/libstm32.a(stm32f10x_tim.o)
-TIM_TimeBaseInit                                  lib/libstm32.a(stm32f10x_tim.o)
-TIM_TimeBaseStructInit                            lib/libstm32.a(stm32f10x_tim.o)
-TIM_UpdateDisableConfig                           lib/libstm32.a(stm32f10x_tim.o)
-TIM_UpdateRequestConfig                           lib/libstm32.a(stm32f10x_tim.o)
 Tim                                               stm32f10x_it.o
                                                   main.o
 Tim1                                              stm32f10x_it.o
@@ -1358,6 +1036,8 @@ atexit                                            /usr/local/lib/gcc/arm-elf/4.3
                                                   /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
 change_back                                       /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/crt0.o
 cleanup_glue                                      /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
+count_std_setup                                   system.o
+                                                  main.o
 errno                                             /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-reent.o)
                                                   /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-sbrkr.o)
 exit                                              /usr/local/lib/gcc/arm-elf/4.3.0/../../../../arm-elf/lib/thumb/libc.a(lib_a-exit.o)
