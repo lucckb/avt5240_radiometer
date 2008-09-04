@@ -21,7 +21,11 @@ void reset_handler(void) __attribute__((__interrupt__));
 
 extern int main(void);
 
+/*----------------------------------------------------------*/
+//Handlers declarations
+
 void sys_tick_handler(void);
+
 
 /*----------------------------------------------------------*/
 
@@ -30,7 +34,7 @@ static void unused_vector() {}
 /*----------------------------------------------------------*/
 //Interrupt vector table
 __attribute__ ((section(".isr_vector")))
-void (* const exception_vectors[])(void) =
+void (* const exceptions_vectors[])(void) =
 {
   &_estack,            // The initial stack pointer
   reset_handler,             // The reset handler
