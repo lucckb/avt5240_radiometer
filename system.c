@@ -4,7 +4,7 @@
 
 #include "stm32f10x_lib.h"
 #include "system.h"
-
+#include "radiation.h"
 
 //External crystal on
 #define RCC_CR_HSEON (1<<16)
@@ -114,24 +114,20 @@ void lcd_pwm_setup(void)
 	TIM3->CR1 |= CR1_CEN_Set;
 }
 
+
+
 /*----------------------------------------------------------*/
-#define GPIO_BIT0_CRL_MASK 0xfffffff0
-#define GPIO_INPUT_FLOAT 1
+//System timer handler called with frequency 100Hz
+volatile int sysTimer = 0;
+volatile short Tim40s = HZ*40;
 
-//Setup counter with standard russian counting alg.
-void count_std_setup(void)
+void sys_tick_handler(void)
 {
-	//Enable APB perhiperal
-	RCC->APB2ENR |= RCC_APB2Periph_GPIOA;
-	RCC->APB1ENR |= RCC_APB1Periph_TIM2;
-	//Setup GPIOA.0 as input
-	GPIOA->CRL &= GPIO_BIT0_CRL_MASK;
-	GPIOA->CRL |= GPIO_INPUT_FLOAT << 2;
-	//Configure timer for counting external events
-	TIM2->SMCR = (1<<15) | (1<<14);
-	//Enable timer
-	TIM2->CR1 |= CR1_CEN_Set;
+    if(sysTimer) --sysTimer;
+    if(--Tim40s==0)
+    {
+    	//Called after 40s timeout event
+    	radiation_on40s_timeout_event();
+    	Tim40s = HZ * 40;
+    }
 }
-
-
-

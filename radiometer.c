@@ -1,22 +1,15 @@
 #include "stm32f10x_lib.h"
 #include "lcd.h"
 #include "system.h"
+#include "radiation.h"
 
 
 
-volatile int Tim = 0;
-volatile int Tim1 = 0;
-
-void sys_tick_handler(void)
-{
-    if(Tim) --Tim;
-    if(Tim1) --Tim1;
-
-}
-
-
+/*----------------------------------------------------------*/
+//Main core function
 int main(void)
 {
+
   //Initialize system perhiperals
   system_setup();
 	
@@ -32,31 +25,26 @@ int main(void)
   lcdPutStr("LiniaC");
   lcdSetPos(0x40);
   lcdPutStr("Linia2");
-  
+      
   //Enable standard counting algoritm
-  count_std_setup();   
-  Tim1 = 4000; //40 second
+  setup_radiation(radiationCountSTD);
+  
 
   while(1)
   {
     lcdSetPos(0x40);
     lcdPutStr("        ");
     lcdSetPos(0x40);
-    lcdPutInt(TIM2->CNT);
+    lcdPutInt(get_radiation(radiationCURRENT));
     lcdPutStr("uRh");
-    Tim=10;
-    while(Tim);
-    if(Tim1==0)
-    {
-        Tim1 = 4000;
-        lcdSetPos(0);
-        lcdPutStr("        ");
-        lcdSetPos(0);
-        lcdPutInt(TIM2->CNT);
-        lcdPutStr("uRh");
-        TIM2->CNT = 0;
+    lcdSetPos(0);
+    lcdPutStr("        ");
+    lcdSetPos(0);
+    lcdPutInt(get_radiation(radiationLAST));
+    lcdPutStr("uRh");
+    systick_wait(HZ/5);
     }
-  }
+
       
 }
 
