@@ -1,6 +1,10 @@
 #ifndef SYSTEM_H_
 #define SYSTEM_H_
 
+/*----------------------------------------------------------*/
+
+#include <stdint.h>
+#include <stdbool.h>
 
 /*----------------------------------------------------------*/
 //System Hz 
@@ -37,4 +41,29 @@ static inline int systick_get(void) { return sysTimer; }
 static inline void systick_wait(int tick) { sysTimer = tick; while(sysTimer); }
 
 /*----------------------------------------------------------*/
+//Setup NVIC priority group 
+void nvic_priority_group(uint32_t group);
+
+/*----------------------------------------------------------*/
+/* Setup NVIC priority
+ * channel - setup selected channel
+ * priority - assign IRQ preemtion priority
+ * subpriority - assign supbriority */
+void nvic_irq_priority(uint8_t channel,uint8_t priority,uint8_t subpriority);
+
+/*----------------------------------------------------------*/
+/* Enable or disable selected channel in NVIC
+ * channel - channel number
+ * enable - enable or disable */
+void nvic_irq_enable(uint8_t channel, bool enable);
+
+/*----------------------------------------------------------*/
+/* Setup NVIC system handler priority
+ * handler - setup selected channel
+ * priority - assign IRQ preemtion priority
+ * subpriority - assign supbriority */
+void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority);
+
+/*----------------------------------------------------------*/
+
 #endif /*SYSTEM_H_*/

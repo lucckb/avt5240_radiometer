@@ -19,6 +19,13 @@ int main(void)
    //Initialize LCD
   lcdInit();
   
+  
+  //1 bit for preemtion priority
+  nvic_priority_group(NVIC_PriorityGroup_1);
+  
+  //Sys tick handler preemtion priority to lower
+  nvic_system_priority(SystemHandler_SysTick,1,0);
+  
   //Setup system timer to 0,01 s
   systick_setup(10000);
     
@@ -27,23 +34,23 @@ int main(void)
   lcdPutStr("Linia2");
       
   //Enable standard counting algoritm
-  setup_radiation(radiationCountSTD);
+  setup_radiation(radiationCountMEDIUM);
   
 
   while(1)
   {
+    //lcdSetPos(0x40);
+    //lcdPutStr("        ");
     lcdSetPos(0x40);
-    lcdPutStr("        ");
-    lcdSetPos(0x40);
-    lcdPutInt(get_radiation(radiationCURRENT));
-    lcdPutStr("uRh");
+    //lcdPutInt(get_radiation(radiationCURRENT));
+    //lcdPutStr("uRh");
     lcdSetPos(0);
     lcdPutStr("        ");
     lcdSetPos(0);
     lcdPutInt(get_radiation(radiationLAST));
     lcdPutStr("uRh");
     systick_wait(HZ/5);
-    }
+  }
 
       
 }

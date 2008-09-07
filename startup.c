@@ -23,12 +23,13 @@ void reset_handler(void) __attribute__((__interrupt__));
 extern int main(void);
 
 /*----------------------------------------------------------*/
+
 //Handlers declarations
-
 void sys_tick_handler(void);
-
+void timer2_handler(void);
 
 /*----------------------------------------------------------*/
+//Unused vector dummy function
 static void unused_vector() {}
 
 /*----------------------------------------------------------*/
@@ -52,7 +53,7 @@ void (* const exceptions_vectors[])(void) =
   unused_vector,//,WWDG_IRQHandler,
   unused_vector,//PVD_IRQHandler,
   unused_vector,//TAMPER_IRQHandler,
-  unused_vector,//RTC_IRQHandler,
+  unused_vector,//RTC_IRQHandler,TIM2->CCR1
   unused_vector,//FLASH_IRQHandler,
   unused_vector,//RCC_IRQHandler,
   unused_vector,//EXTI0_IRQHandler,
@@ -77,7 +78,7 @@ void (* const exceptions_vectors[])(void) =
   unused_vector,//TIM1_UP_IRQHandler,
   unused_vector,//TIM1_TRG_COM_IRQHandler,
   unused_vector,//TIM1_CC_IRQHandler,
-  unused_vector,//TIM2_IRQHandler,
+  timer2_handler,//TIM2_IRQHandler,
   unused_vector,//TIM3_IRQHandler,
   unused_vector,//TIM4_IRQHandler,
   unused_vector,//I2C1_EV_IRQHandler,
