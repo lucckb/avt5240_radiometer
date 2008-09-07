@@ -25,6 +25,7 @@
 //HSE oscilator control
 #define RCC_CR_HSI_ON (1<<0)
 
+
 /*----------------------------------------------------------*/
 //Cortex stm32 System setup
 void system_setup(void)
@@ -42,7 +43,7 @@ void system_setup(void)
     }
     //Configure flash: Prefetch enable and 0 wait state
     FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_0; 
-    //Configure system clocks ALL clocks freq 8MHz
+    //Configure system clocks ALL clocks freq 8MHz 
     RCC->CFGR = RCC_CFGR_SW_HSE | RCC_CFGR_MCO_SYSCLK;
     // At end disable HSI oscilator for power reduction
     RCC->CR &= ~RCC_CR_HSI_ON;
@@ -151,7 +152,7 @@ void nvic_priority_group(uint32_t group)
  * subpriority - assign supbriority */
 void nvic_irq_priority(uint8_t channel,uint8_t priority,uint8_t subpriority)
 {
-	/* Compute the Corresponding IRQ Priority --------------------------------*/    
+	/* Compute the Corresponding IRQ Priority */    
 	uint32_t tmppriority = (0x700 - (SCB->AIRCR & (u32)0x700))>> 0x08;
 	uint32_t tmppre = (0x4 - tmppriority);
 	uint32_t tmpsub = 0x0F;

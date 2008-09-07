@@ -96,8 +96,8 @@ void setup_radiation(enum radiationCountMode mode)
 	//Extended counting mode based on sample time
 	else
 	{
-		//Prescaler for 2us pulse
-		TIM2->PSC = 15;
+		//Prescaler for 5us pulse
+		TIM2->PSC = 39;
 		//Disable external counting mode
 		TIM2->SMCR = 0;
 		//Disable capture channel
