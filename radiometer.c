@@ -34,16 +34,16 @@ int main(void)
   lcdPutStr("Linia2");
       
   //Enable standard counting algoritm
-  setup_radiation(radiationCountMEDIUM);
+  setup_radiation(radiationCountSHORT);
   
 
   while(1)
   {
-    //lcdSetPos(0x40);
-    //lcdPutStr("        ");
     lcdSetPos(0x40);
-    //lcdPutInt(get_radiation(radiationCURRENT));
-    //lcdPutStr("uRh");
+    lcdPutStr("        ");
+    lcdSetPos(0x40);
+    lcdPutInt(get_radiation(radiationCURRENT));
+    lcdPutStr("uRh");
     lcdSetPos(0);
     lcdPutStr("        ");
     lcdSetPos(0);
