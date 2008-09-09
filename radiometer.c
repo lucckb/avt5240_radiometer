@@ -34,7 +34,7 @@ int main(void)
   lcdPutStr("Linia2");
       
   //Enable standard counting algoritm
-  setup_radiation(radiationCountSHORT);
+  setup_radiation(radiationCountMEDIUM);
   
 
   while(1)

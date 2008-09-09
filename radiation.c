@@ -35,31 +35,33 @@ static volatile unsigned short samplesWrPos;
 //Calculate current radiation
 static int calcstd_radiation(void)
 {
-	uint32_t i0,i1,diff;
+	uint32_t diff;
 	short n = 0;
 	uint64_t sum = 0;
-	//Save sample in variable
-	i1 = samplesWrPos;
-	i0 = (i1 - 1)%(samplesLength+SAMPLEBUF_MARGIN);
-	i1 = (i1 - samplesLength)%(samplesLength+SAMPLEBUF_MARGIN);
-	for(int i=i0;i!=i1;i=(i-1)%(samplesLength+SAMPLEBUF_MARGIN))
+	
+	for( 
+		 uint32_t i=0,sWr=samplesWrPos,
+		 i0=(sWr+samplesLength+SAMPLEBUF_MARGIN-1)%(samplesLength+SAMPLEBUF_MARGIN),
+		 i1= (sWr+samplesLength+SAMPLEBUF_MARGIN-2)%(samplesLength+SAMPLEBUF_MARGIN) ;
+		 i<samplesLength-1 ;
+		 i++,
+		 i0=(samplesLength+SAMPLEBUF_MARGIN-1+i0)%(samplesLength+SAMPLEBUF_MARGIN),
+		 i1=(samplesLength+SAMPLEBUF_MARGIN-1+i1)%(samplesLength+SAMPLEBUF_MARGIN) 
+	    )
 	{
-		lcdSetPos(0x40);
-		lcdPutStr("     ");
-		lcdSetPos(0x40);
-		lcdPutInt(i);
-		for(volatile int z=0;z<1000000;z++) asm volatile("nop");
-		diff = samples[i] - samples[(i-1)%(samplesLength+SAMPLEBUF_MARGIN)];
-		if(diff>5 && diff<2000000)
+		diff = samples[i0] - samples[i1];
+		if(diff>5 && diff<8000000)
 		{
 			sum += diff;
 			n++;
 		}	
 	}
 	//Too small samples count
-	if(n<10) return -1;
-	float res = 40.0 / (((float)diff/(float)n)*5E-6);
-	return res + 0.5;
+    if(n<9) return 0;
+    //Calculate dose 
+    return 8000000/(sum/n);
+   
+   
 }
 
 /*----------------------------------------------------------*/
