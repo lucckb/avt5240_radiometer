@@ -36,19 +36,30 @@ int main(void)
   //Enable standard counting algoritm
   setup_radiation(radiationCountMEDIUM);
   
+  int radiation;
 
   while(1)
   {
     lcdSetPos(0x40);
     lcdPutStr("        ");
+    radiation = get_radiation(radiationCURRENT);
     lcdSetPos(0x40);
-    lcdPutInt(get_radiation(radiationCURRENT));
-    lcdPutStr("uRh");
+    if(radiation==0)
+    {
+    	lcdPutStr("-----");
+    }
+    else
+    {
+    	lcdPutInt(radiation);
+    	lcdPutStr("uRh");
+    }
+    /*
     lcdSetPos(0);
     lcdPutStr("        ");
     lcdSetPos(0);
     lcdPutInt(get_radiation(radiationLAST));
     lcdPutStr("uRh");
+    */
     systick_wait(HZ/5);
   }
 

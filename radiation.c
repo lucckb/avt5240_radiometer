@@ -35,8 +35,7 @@ static volatile unsigned short samplesWrPos;
 //Calculate current radiation
 static int calcstd_radiation(void)
 {
-	uint32_t diff;
-	short n = 0;
+	uint32_t diff,n;
 	uint64_t sum = 0;
 	
 	for( 
@@ -59,9 +58,7 @@ static int calcstd_radiation(void)
 	//Too small samples count
     if(n<9) return 0;
     //Calculate dose 
-    return 8000000/(sum/n);
-   
-   
+    return 8000000.0 / ( (float)sum / (float)n ) + 0.5 ;
 }
 
 /*----------------------------------------------------------*/
