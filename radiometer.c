@@ -61,8 +61,6 @@ int main(void)
     lcdPutStr("uRh");
     */
     systick_wait(HZ/5);
-  }
-
-      
+  } 
 }
 
