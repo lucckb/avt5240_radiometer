@@ -2,7 +2,7 @@
 #include "lcd.h"
 #include "system.h"
 #include "radiation.h"
-
+#include "rtc.h"
 
 
 /*----------------------------------------------------------*/
@@ -19,7 +19,6 @@ int main(void)
    //Initialize LCD
   lcdInit();
   
-  
   //1 bit for preemtion priority
   nvic_priority_group(NVIC_PriorityGroup_1);
   
@@ -28,8 +27,25 @@ int main(void)
   
   //Setup system timer to 0,01 s
   systick_setup(10000);
-    
-  lcdPutStr("LiniaC");
+  
+  //Enable rtc
+  rtc_setup();
+  
+  //Rtc test
+  struct tm tm;
+  memset(&tm,0,sizeof(tm));
+  tm.tm_hour = 12;
+  tm.tm_min = 12;
+  tm.tm_sec = 12;
+  tm.tm_mday = 10;
+  tm.tm_mon = 9;
+  tm.tm_year = 2008;
+  
+  
+  //rtc_set(mktime(&tm));
+  rtc_set(5555);
+  
+  lcdPutStr("BoFF");
   lcdSetPos(0x40);
   lcdPutStr("Linia2");
       
@@ -60,6 +76,19 @@ int main(void)
     lcdPutInt(get_radiation(radiationLAST));
     lcdPutStr("uRh");
     */
+    {
+    	time_t t = rtc_get();
+    	/*
+    	gmtime_r(&t,&tm);
+    	lcdSetPos(0);
+    	lcdPutInt(tm.tm_hour);
+    	lcdPutChar(':');
+    	lcdPutInt(tm.tm_min);
+    	lcdPutChar(':');
+    	lcdPutInt(tm.tm_sec); */
+    	lcdSetPos(0);
+    	lcdPutInt(t);
+    }
     systick_wait(HZ/5);
   } 
 }

@@ -10,6 +10,10 @@
 //System Hz 
 #define HZ 100
 
+//Stadard status
+#define EXIT_SUCCESS 0
+#define EXIT_FAILURE -1
+
 /*----------------------------------------------------------*/
 //Cortex stm32 System setup
 void system_setup(void);
