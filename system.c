@@ -123,6 +123,7 @@ void lcd_pwm_setup(void)
 volatile int sysTimer = 0;
 volatile short Tim40s = HZ*40;
 
+void sys_tick_handler(void) __attribute__((__interrupt__));
 void sys_tick_handler(void)
 {
     if(sysTimer) --sysTimer;

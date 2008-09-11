@@ -17,7 +17,7 @@
 #define SAMPLEBUF_LENGTH (radiationCountHIGH + SAMPLEBUF_MARGIN)
 
 //Sample length for radiation 
-static unsigned short samplesLength;
+static volatile unsigned short samplesLength;
 
 //Exposion dose last in standard alg
 static volatile int expDoseLast; 
@@ -31,13 +31,15 @@ static volatile unsigned int samples[SAMPLEBUF_LENGTH+1];
 //Current sample position counter
 static volatile unsigned short samplesWrPos;
 
+
+
 /*----------------------------------------------------------*/
 //Calculate current radiation
 static int calcstd_radiation(void)
 {
-	uint32_t diff,n;
+	uint32_t diff;
 	uint64_t sum = 0;
-	
+	uint32_t n = 0;
 	for( 
 		 uint32_t i=0,sWr=samplesWrPos,
 		 i0=(sWr+samplesLength+SAMPLEBUF_MARGIN-1)%(samplesLength+SAMPLEBUF_MARGIN),
@@ -59,6 +61,7 @@ static int calcstd_radiation(void)
     if(n<9) return 0;
     //Calculate dose 
     return 8000000.0 / ( (float)sum / (float)n ) + 0.5 ;
+	
 }
 
 /*----------------------------------------------------------*/
@@ -110,6 +113,10 @@ void setup_radiation(enum radiationCountMode mode)
 	
 	//Disable  nvic channel interrupt
 	nvic_irq_enable(TIM2_IRQChannel,false);
+	
+	//Setup sample alghoritm
+	samplesLength = mode;
+	
 	//Setup higest priority for this int
 	nvic_irq_priority(TIM2_IRQChannel,0,0);
 	
@@ -137,11 +144,12 @@ void setup_radiation(enum radiationCountMode mode)
 		//Configure timer for counting external events
 		TIM2->SMCR = SMCR_ETP | SMCR_ECE;
 		//Enable IRQ Overflow
-		TIM2->DIER |= DIER_UIE;
+		TIM2->DIER |= DIER_UIE; 
 	}
 	//Extended counting mode based on sample time
 	else
 	{
+		
 		//Prescaler for 5us pulse
 		TIM2->PSC = 39;
 		//Disable external counting mode
@@ -160,10 +168,8 @@ void setup_radiation(enum radiationCountMode mode)
 		//Enable IRQ capture channel 1
 		TIM2->DIER |= DIER_CC1IE;
 		//Enable IRQ Overflow
-		TIM2->DIER |= DIER_UIE;
+		TIM2->DIER |= DIER_UIE; 
 	}
-	//Setup sample alghoritm
-	samplesLength = mode;
 	//Enable nvic channel
 	nvic_irq_enable(TIM2_IRQChannel,true);
 	//Enable timer2
@@ -172,6 +178,7 @@ void setup_radiation(enum radiationCountMode mode)
 
 /*----------------------------------------------------------*/
 //Timer 2 exception handler 
+void timer2_handler(void) __attribute__((__interrupt__));
 void timer2_handler(void)
 {
 	if(TIM2->SR & SR_UIF)

@@ -29,21 +29,21 @@ int main(void)
   systick_setup(10000);
   
   //Enable rtc
-  rtc_setup();
-  
+  rtc_setup();  
   //Rtc test
-  struct tm tm;
-  memset(&tm,0,sizeof(tm));
-  tm.tm_hour = 12;
-  tm.tm_min = 12;
-  tm.tm_sec = 12;
-  tm.tm_mday = 10;
-  tm.tm_mon = 9;
-  tm.tm_year = 2008;
+  static struct rtc_tm tmx;
   
+  tmx.tm_hour = 22;
+  tmx.tm_isdst = 0;
+  tmx.tm_mday = 1;
+  tmx.tm_min = 34;
+  tmx.tm_mon = 1;
+  tmx.tm_sec = 0;
+  tmx.tm_wday = 0;
+  tmx.tm_yday = 1;
+  tmx.tm_year = 2008 - 1900;
   
-  //rtc_set(mktime(&tm));
-  rtc_set(5555);
+  //rtc_set(rtc_mktime(&tmx));
   
   lcdPutStr("BoFF");
   lcdSetPos(0x40);
@@ -78,16 +78,13 @@ int main(void)
     */
     {
     	time_t t = rtc_get();
-    	/*
-    	gmtime_r(&t,&tm);
+    	rtc_gmtime(&t,&tmx);
     	lcdSetPos(0);
-    	lcdPutInt(tm.tm_hour);
+    	lcdPutInt(tmx.tm_hour);
     	lcdPutChar(':');
-    	lcdPutInt(tm.tm_min);
+    	lcdPutInt(tmx.tm_min);
     	lcdPutChar(':');
-    	lcdPutInt(tm.tm_sec); */
-    	lcdSetPos(0);
-    	lcdPutInt(t);
+    	lcdPutInt(tmx.tm_sec); 
     }
     systick_wait(HZ/5);
   } 
