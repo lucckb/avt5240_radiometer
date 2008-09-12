@@ -1,9 +1,9 @@
-#include "stm32f10x_lib.h"
 #include "lcd.h"
 #include "system.h"
 #include "radiation.h"
 #include "rtc.h"
-
+#include "stm32f10x_lib.h"
+#include "adc.h"
 
 /*----------------------------------------------------------*/
 //Main core function
@@ -30,6 +30,11 @@ int main(void)
   
   //Enable rtc
   rtc_setup();  
+  
+  //Enable AC converter
+  adc_setup();
+  
+  
   //Rtc test
   static struct rtc_tm tmx;
   
@@ -51,6 +56,9 @@ int main(void)
       
   //Enable standard counting algoritm
   setup_radiation(radiationCountMEDIUM);
+ 
+  //rtc_bkp_write(1,1979);
+  rtc_bkp_write(10,7711);
   
   int radiation;
 
@@ -76,6 +84,7 @@ int main(void)
     lcdPutInt(get_radiation(radiationLAST));
     lcdPutStr("uRh");
     */
+    /*
     {
     	time_t t = rtc_get();
     	rtc_gmtime(&t,&tmx);
@@ -85,8 +94,11 @@ int main(void)
     	lcdPutInt(tmx.tm_min);
     	lcdPutChar(':');
     	lcdPutInt(tmx.tm_sec); 
-    }
+    }*/
+    adc_startconv();
     systick_wait(HZ/5);
+    lcdSetPos(0);
+    lcdPutInt(adc_getval());
   } 
 }
 

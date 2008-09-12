@@ -21,6 +21,8 @@
 #define RCC_CFGR_SW_HSE 0x01
 //MCO as system clock
 #define RCC_CFGR_MCO_SYSCLK (4<<24)
+//Configure ADC prescaler to 8
+#define RCC_CFGR_ADCPRE_8 (3<<14)
 
 //HSE oscilator control
 #define RCC_CR_HSI_ON (1<<0)
@@ -43,8 +45,8 @@ void system_setup(void)
     }
     //Configure flash: Prefetch enable and 0 wait state
     FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_0; 
-    //Configure system clocks ALL clocks freq 8MHz 
-    RCC->CFGR = RCC_CFGR_SW_HSE | RCC_CFGR_MCO_SYSCLK;
+    //Configure system clocks ALL clocks freq 8MHz ADC to 1MHz
+    RCC->CFGR = RCC_CFGR_SW_HSE | RCC_CFGR_MCO_SYSCLK | RCC_CFGR_ADCPRE_8;
     // At end disable HSI oscilator for power reduction
     RCC->CR &= ~RCC_CR_HSI_ON;
     //Setup NVIC vector at begin of flash

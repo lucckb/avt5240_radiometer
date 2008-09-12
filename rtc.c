@@ -106,6 +106,26 @@ void rtc_set(time_t time)
 
 /*----------------------------------------------------------*/
 
+//Write BKP registers
+void rtc_bkp_write(uint8_t addr,uint16_t value)
+{
+	if(addr>10) return;
+	if(addr<1) return;
+	*((volatile uint16_t*)(BKP_BASE+addr*4) ) = value;
+}
+
+/*----------------------------------------------------------*/
+
+//Write BKP registers
+uint16_t rtc_bkp_read(uint8_t addr)
+{
+	if(addr>10) return 0;
+	if(addr<1) return 0;
+	return *( (volatile uint16_t*)(BKP_BASE+addr*4) );
+}
+
+
+/*----------------------------------------------------------*/
 #define YEAR0                   1900
 #define EPOCH_YR                1970
 #define SECS_DAY                (24L * 60L * 60L)

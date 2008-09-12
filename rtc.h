@@ -1,6 +1,7 @@
 #ifndef RTC_H_
 #define RTC_H_
 
+#include <stdint.h>
 
 /*----------------------------------------------------------*/
 
@@ -34,6 +35,16 @@ time_t rtc_get(void);
 
 //Set rtc clock
 void rtc_set(time_t time);
+
+/*----------------------------------------------------------*/
+
+//Write BKP registers
+uint16_t rtc_bkp_read(uint8_t addr);
+
+/*----------------------------------------------------------*/
+
+//Write BKP registers
+void rtc_bkp_write(uint8_t addr,uint16_t value);
 
 /*----------------------------------------------------------*/
 
