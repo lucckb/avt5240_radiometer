@@ -40,7 +40,7 @@ void setup_radiation(enum radiationCountMode mode);
 /*----------------------------------------------------------*/
 
 //In standard alghoritm called from interrupt content
-void radiation_on40s_timeout_event(void);
+void on_radiation_timeout_event(void);
 
 /*----------------------------------------------------------*/
 

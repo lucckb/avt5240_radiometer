@@ -13,6 +13,9 @@
 //Sample buf margin for computation
 #define SAMPLEBUF_MARGIN 40
 
+//Led timeout
+#define LED_TIMEOUT 6
+
 //Samples buffer length 
 #define SAMPLEBUF_LENGTH (radiationCountHIGH + SAMPLEBUF_MARGIN)
 
@@ -106,6 +109,14 @@ int get_radiation(enum radiationMode mode)
 #define DIER_UIE (1<<0)					//Update interrupt register
 #define CR1_URS (1<<2)					//Overflow update 
 
+#define GPIO_LED_Mask 0xfffff0ff		//GPIO Led mask
+#define GPIO_MODE_10MHZ 1				//GpioMode 10M
+
+/*----------------------------------------------------------*/
+//Macro for LED control
+#define LED_ON() GPIOA->BSRR = (1<<18)
+#define LED_OFF() GPIOA->BSRR = (1<<2)
+
 /*----------------------------------------------------------*/
 //Setup counter with standard russian counting alg.
 void setup_radiation(enum radiationCountMode mode)
@@ -126,6 +137,11 @@ void setup_radiation(enum radiationCountMode mode)
 	//Setup GPIOA.0 as input
 	GPIOA->CRL &= GPIO_BIT0_CRL_MASK;
 	GPIOA->CRL |= GPIO_INPUT_FLOAT << 2;
+	
+	//Gpio LED configuration
+	 GPIOA->CRL &= GPIO_LED_Mask;
+	 GPIOA->CRL |= GPIO_MODE_10MHZ<<8;
+	 LED_OFF();
 	
 	//Disable and reset timer
 	TIM2->CR1 = CR1_URS;
@@ -177,6 +193,9 @@ void setup_radiation(enum radiationCountMode mode)
 }
 
 /*----------------------------------------------------------*/
+
+volatile short TimLed;
+
 //Timer 2 exception handler 
 void timer2_handler(void) __attribute__((__interrupt__));
 void timer2_handler(void)
@@ -197,17 +216,28 @@ void timer2_handler(void)
 		{
 			samplesWrPos = 0;
 		}
-		
+		//Blinking Led Algo
+		LED_ON();
+		TimLed = LED_TIMEOUT;
 	}
 }
 
 /*----------------------------------------------------------*/
+volatile short Tim40s = HZ*40;
+
 //This function should be called after 40s from interrupt handler
-void radiation_on40s_timeout_event(void)
+void on_radiation_timeout_event(void)
 {
-	if(samplesLength==0)
+	//In standard alghoritm move measured radiation to dose
+	if(--Tim40s==0)
 	{
-		expDoseLast = TIM2->CNT;
-		TIM2->CNT = 0;
+		if(samplesLength==0)
+		{
+			expDoseLast = TIM2->CNT;
+			TIM2->CNT = 0;
+		}
+		Tim40s = HZ * 40;
 	}
+	//Disable blink LED when event finished
+	if(--TimLed==0) LED_OFF();
 }

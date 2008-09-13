@@ -4,6 +4,7 @@
 #include "rtc.h"
 #include "stm32f10x_lib.h"
 #include "adc.h"
+#include "keyb.h"
 
 /*----------------------------------------------------------*/
 //Main core function
@@ -34,6 +35,8 @@ int main(void)
   //Enable AC converter
   adc_setup();
   
+  //Initialize kbd
+  keyb_setup();  
   
   //Rtc test
   static struct rtc_tm tmx;
@@ -95,10 +98,11 @@ int main(void)
     	lcdPutChar(':');
     	lcdPutInt(tmx.tm_sec); 
     }*/
-    adc_startconv();
     systick_wait(HZ/5);
     lcdSetPos(0);
-    lcdPutInt(adc_getval());
+    lcdPutStr("        ");
+    lcdSetPos(0);
+    lcdPutInt(keyb_key);
   } 
 }
 

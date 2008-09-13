@@ -6,6 +6,7 @@
 #include "stm32f10x_lib.h"
 #include "system.h"
 #include "radiation.h"
+#include "keyb.h"
 
 //External crystal on
 #define RCC_CR_HSEON (1<<16)
@@ -91,7 +92,7 @@ void lcd_pwm_setup(void)
 	//Timer base period
 	TIM3->ARR = 199; 
 	//Timer prescaler
-	TIM3->PSC = 0;
+	TIM3->PSC = 9;
 	//Setup Control register
 	TIM3->CR1 = 0;
 	// Disable the Channel 1: Reset the CCE Bit 
@@ -123,18 +124,18 @@ void lcd_pwm_setup(void)
 /*----------------------------------------------------------*/
 //System timer handler called with frequency 100Hz
 volatile int sysTimer = 0;
-volatile short Tim40s = HZ*40;
+
 
 void sys_tick_handler(void) __attribute__((__interrupt__));
 void sys_tick_handler(void)
 {
     if(sysTimer) --sysTimer;
-    if(--Tim40s==0)
-    {
-    	//Called after 40s timeout event
-    	radiation_on40s_timeout_event();
-    	Tim40s = HZ * 40;
-    }
+    
+    //Called after 40s timeout event
+    on_radiation_timeout_event();
+    	
+    //Keyboyard support
+    on_keyb_timer_event();
 }
 
 /*----------------------------------------------------------*/
