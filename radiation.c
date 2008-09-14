@@ -34,8 +34,7 @@ static volatile unsigned int samples[SAMPLEBUF_LENGTH+1];
 //Current sample position counter
 static volatile unsigned short samplesWrPos;
 
-
-
+ 
 /*----------------------------------------------------------*/
 //Calculate current radiation
 static int calcstd_radiation(void)
@@ -43,6 +42,7 @@ static int calcstd_radiation(void)
 	uint32_t diff;
 	uint64_t sum = 0;
 	uint32_t n = 0;
+	
 	for( 
 		 uint32_t i=0,sWr=samplesWrPos,
 		 i0=(sWr+samplesLength+SAMPLEBUF_MARGIN-1)%(samplesLength+SAMPLEBUF_MARGIN),
@@ -54,7 +54,7 @@ static int calcstd_radiation(void)
 	    )
 	{
 		diff = samples[i0] - samples[i1];
-		if(diff>5 && diff<8000000)
+		if(diff>10 && diff<8000000)
 		{
 			sum += diff;
 			n++;
@@ -101,8 +101,9 @@ int get_radiation(enum radiationMode mode)
 #define SMCR_ECE (1<<14)				//ECE Bit
 #define DIER_CC1IE (1<<1)				//Enable interrupt compare capt
 #define CCER_CC1E (1<<0)				//Enable compare capture CH1
+#define CCER_CC1P (1<<1)				//Falling edge
 #define CCMR1_CH1_MASK 0xff00			//Channel 1 mask
-#define CCMR1_CH1_FILTER_F1_N2 (1<<4)	//Filter settings
+#define CCMR1_CH1_FILTER_F4_N8 (7<<4)	//Filter settings
 #define CCMR1_CC1S_IC1_TI1 1			//Input mode
 #define SR_CC1IF (1<<1)					//Comp/Cap CH1 pending bit
 #define SR_UIF (1<<0)					//Update Tim pending bit
@@ -137,7 +138,8 @@ void setup_radiation(enum radiationCountMode mode)
 	//Setup GPIOA.0 as input
 	GPIOA->CRL &= GPIO_BIT0_CRL_MASK;
 	GPIOA->CRL |= GPIO_INPUT_FLOAT << 2;
-	
+
+
 	//Gpio LED configuration
 	 GPIOA->CRL &= GPIO_LED_Mask;
 	 GPIOA->CRL |= GPIO_MODE_10MHZ<<8;
@@ -158,7 +160,7 @@ void setup_radiation(enum radiationCountMode mode)
 		TIM2->CCER &= ~CCER_CC1E;
 		TIM2->PSC = 0;
 		//Configure timer for counting external events
-		TIM2->SMCR = SMCR_ETP | SMCR_ECE;
+		TIM2->SMCR = SMCR_ETP | SMCR_ECE | (CCMR1_CH1_FILTER_F4_N8<<8);
 		//Enable IRQ Overflow
 		TIM2->DIER |= DIER_UIE; 
 	}
@@ -174,12 +176,12 @@ void setup_radiation(enum radiationCountMode mode)
 		TIM2->CCER &= ~CCER_CC1E;
 		//Setup CAP1 channel
 		TIM2->CCMR1 &= CCMR1_CH1_MASK;
-		//Filter length N=2
-		TIM2->CCMR1 |= CCMR1_CH1_FILTER_F1_N2;
+		//Filter length N=8 f=f/4
+		TIM2->CCMR1 |= CCMR1_CH1_FILTER_F4_N8;
 		//Select input from CH1
 		TIM2->CCMR1 |= CCMR1_CC1S_IC1_TI1;
-		//Enable capture channel
-		TIM2->CCER |= CCER_CC1E;
+		//Enable capture channel falling edge
+		TIM2->CCER |= CCER_CC1E | CCER_CC1P;
 		
 		//Enable IRQ capture channel 1
 		TIM2->DIER |= DIER_CC1IE;
@@ -219,6 +221,8 @@ void timer2_handler(void)
 		//Blinking Led Algo
 		LED_ON();
 		TimLed = LED_TIMEOUT;
+		//Click buzer
+		buzer_click();
 	}
 }
 

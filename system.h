@@ -5,6 +5,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "stm32f10x_lib.h"
 
 /*----------------------------------------------------------*/
 //System Hz 
@@ -14,6 +15,7 @@
 #define EXIT_SUCCESS 0
 #define EXIT_FAILURE -1
 
+
 /*----------------------------------------------------------*/
 //Cortex stm32 System setup
 void system_setup(void);
@@ -22,6 +24,18 @@ void system_setup(void);
 
 //Configure system timer to requied interval
 void systick_setup(int reload);
+
+/*----------------------------------------------------------*/
+//Setup buzzer to selected rate
+void buzer_alarm(bool onOff);
+
+/*----------------------------------------------------------*/
+//Generate buzer click
+static inline void buzer_click(void)
+{
+	//buzer_control(buzerPulse);
+	GPIOA->ODR ^= (1<<7);
+}
 
 /*----------------------------------------------------------*/
 

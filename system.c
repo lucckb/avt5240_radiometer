@@ -28,6 +28,8 @@
 //HSE oscilator control
 #define RCC_CR_HSI_ON (1<<0)
 
+//Private variable buzzer state
+static volatile bool buzerAlarm;
 
 /*----------------------------------------------------------*/
 //Cortex stm32 System setup
@@ -72,9 +74,11 @@ void systick_setup(int reload)
 
 /*----------------------------------------------------------*/
 #define CCER_CC1E_Reset             ((u16)0x3332)
-#define TIM_OCMode_PWM1             ((u16)0x0060)
+#define CCER_CC2E_Reset				(~(1<<4))             
 #define CCER_CC1E_Set               ((u16)0x0001)
+#define CCER_CC2E_Set               (1<<4)
 #define CCER_CC1P_Reset             ((u16)0x3331)
+#define CCER_CC2P_Reset             ~(1<<5)
 #define TIM_OCPreload_Enable        ((u16)0x0008)
 #define CR1_ARPE_Set                ((u16)0x0080)
 #define CR1_CEN_Set                 ((u16)0x0001)
@@ -115,11 +119,73 @@ void lcd_pwm_setup(void)
 	//Max PA.6 signal
 	GPIOA->CRL &= GPIO_BIT6_CRL_MASK;
 	GPIOA->CRL |= (GPIO_MODE_10MHZ << 24) | (GPIO_CNF_ALT_PUSHPULL<<26);
+	
+	//Setup PWM for buzzer
+	// Disable the Channel 2: Reset the CCE Bit
+	TIM3->CCER &= CCER_CC2E_Reset;
+	//Enable PWM1 mode
+	TIM3->CCMR1 &= 0x00ff;
+	TIM3->CCMR1 |= TIM_OCMode_PWM1<<8;
+	//PWM duty cycle to 0%
+	TIM3->CCR2 = 0;		//Disable signal PWM 0%
+	//Reset polarity
+	TIM3->CCER &= CCER_CC2P_Reset;
+	TIM3->CCMR1 |= TIM_OCPreload_Enable<<8;
 	//Enable timer
 	TIM3->CR1 |= CR1_CEN_Set;
+	
+	//Buzer in GPIO mode control
+	GPIOA->CRL &= 0x0fffffff;
+	GPIOA->CRL |= (GPIO_MODE_10MHZ<<28);
 }
 
 
+/*----------------------------------------------------------*/
+//Private macros buzzer on of
+#define BUZ_ON() TIM3->CCR2 = 2
+
+#define BUZ_OFF() TIM3->CCR2 = 0
+
+
+/*----------------------------------------------------------*/
+//Setup buzzer to selected rate
+void buzer_alarm(bool onOff)
+{
+	if(onOff)
+	{
+		TIM3->CCER |= CCER_CC2E_Set;
+		GPIOA->CRL &= 0x0fffffff;
+		GPIOA->CRL |= (GPIO_MODE_10MHZ<<28) |(GPIO_CNF_ALT_PUSHPULL<<30);
+		//Enable timer
+		TIM3->CR1 |= CR1_CEN_Set;
+		buzerAlarm = 1;
+	}
+	else
+	{
+		GPIOA->CRL &= 0x0fffffff;
+		GPIOA->CRL |= (GPIO_MODE_10MHZ<<28);
+		// Disable the Channel 2: Reset the CCE Bit
+		TIM3->CCER &= CCER_CC2E_Reset;
+		buzerAlarm = 0;
+	}
+}
+
+/*----------------------------------------------------------*/
+//Internal buzzer timer event
+static void on_buzzer_timer_event(void)
+{
+	static uint16_t buzTim;
+	if(buzerAlarm==0) return;
+	if(buzTim--==0)
+	{
+		BUZ_OFF();
+		buzTim = HZ/2;
+	}
+	else if(buzTim==HZ/4)
+	{
+		BUZ_ON();
+	}
+}
 
 /*----------------------------------------------------------*/
 //System timer handler called with frequency 100Hz
@@ -136,6 +202,9 @@ void sys_tick_handler(void)
     	
     //Keyboyard support
     on_keyb_timer_event();
+    
+    //Buzer timer event handler
+    on_buzzer_timer_event();
 }
 
 /*----------------------------------------------------------*/

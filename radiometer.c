@@ -16,8 +16,8 @@ int main(void)
 	
   //Enable PWM generation
   lcd_pwm_setup();
-	  
-   //Initialize LCD
+    
+  //Initialize LCD
   lcdInit();
   
   //1 bit for preemtion priority
@@ -64,7 +64,8 @@ int main(void)
   rtc_bkp_write(10,7711);
   
   int radiation;
-
+  
+  
   while(1)
   {
     lcdSetPos(0x40);
@@ -99,10 +100,7 @@ int main(void)
     	lcdPutInt(tmx.tm_sec); 
     }*/
     systick_wait(HZ/5);
-    lcdSetPos(0);
-    lcdPutStr("        ");
-    lcdSetPos(0);
-    lcdPutInt(keyb_key);
+    
   } 
 }
 
