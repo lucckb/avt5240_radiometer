@@ -25,21 +25,21 @@
 
 /*----------------------------------------------------*/
 
-void lcdInit(void);
+void lcd_init(void);
 
 /*----------------------------------------------------*/
 
-void lcdPutStr(char *nap);
+void lcd_puts(char *nap);
 
 /*----------------------------------------------------*/
 
 //Wyczysc lcd
-void lcdClear(void);
+void lcd_clear(void);
 
 /*----------------------------------------------------*/
 
 //Wyswietl znak
-void lcdPutChar(char ch);
+void lcd_putch(char ch);
 
 /*----------------------------------------------------*/
 //Send command
@@ -50,19 +50,21 @@ void lcdPutChar(char ch);
 #define LCD_ON        0x04    // Alias for display on
 #define LCD_OFF       0x00    // Alias for display off
 
+void lcd_command(uint8_t disp,uint8_t blink,uint8_t cursor);
 
-void lcdCommand(uint8_t disp,uint8_t blink,uint8_t cursor);
 
 /*----------------------------------------------------*/
 
 //Set position
-void lcdSetPos(uint8_t pos);
+void lcd_setpos(uint8_t x,uint8_t y);
 
 /*----------------------------------------------------*/
-//Wyswietl liczbe
-void lcdPutInt(unsigned int num);
+
+//LCD printf
+int lcd_printf(const char *format, ...);
 
 /*----------------------------------------------------*/
+
 
 #endif
 

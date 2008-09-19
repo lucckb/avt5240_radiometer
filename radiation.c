@@ -8,6 +8,8 @@
 #include "stm32f10x_lib.h"
 #include "radiation.h"
 #include "system.h"
+#include "events.h"
+#include "buzer.h"
 /*----------------------------------------------------------*/
 
 //Sample buf margin for computation
@@ -58,13 +60,12 @@ static int calcstd_radiation(void)
 		{
 			sum += diff;
 			n++;
-		}	
+		}
 	}
 	//Too small samples count
     if(n<9) return 0;
     //Calculate dose 
     return 8000000.0 / ( (float)sum / (float)n ) + 0.5 ;
-	
 }
 
 /*----------------------------------------------------------*/

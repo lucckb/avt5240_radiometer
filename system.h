@@ -7,9 +7,8 @@
 #include <stdbool.h>
 #include "stm32f10x_lib.h"
 
+
 /*----------------------------------------------------------*/
-//System Hz 
-#define HZ 100
 
 //Stadard status
 #define EXIT_SUCCESS 0
@@ -22,43 +21,6 @@ void system_setup(void);
 
 /*----------------------------------------------------------*/
 
-//Configure system timer to requied interval
-void systick_setup(int reload);
-
-/*----------------------------------------------------------*/
-//Setup buzzer to selected rate
-void buzer_alarm(bool onOff);
-
-/*----------------------------------------------------------*/
-//Generate buzer click
-static inline void buzer_click(void)
-{
-	//buzer_control(buzerPulse);
-	GPIOA->ODR ^= (1<<7);
-}
-
-/*----------------------------------------------------------*/
-
-//Enable 20kHZ signal voltage dubler for LCD power supply
-void lcd_pwm_setup(void);
-
-/*----------------------------------------------------------*/
-//Internal use only definition
-extern volatile int sysTimer;
-
-/*----------------------------------------------------------*/
-//System timer set value 
-static inline void systick_set(int tick) { sysTimer = tick; }
-
-/*----------------------------------------------------------*/
-//System timer get value
-static inline int systick_get(void) { return sysTimer; } 
-
-/*----------------------------------------------------------*/
-//Wait for selected time
-static inline void systick_wait(int tick) { sysTimer = tick; while(sysTimer); }
-
-/*----------------------------------------------------------*/
 //Setup NVIC priority group 
 void nvic_priority_group(uint32_t group);
 
@@ -81,6 +43,26 @@ void nvic_irq_enable(uint8_t channel, bool enable);
  * priority - assign IRQ preemtion priority
  * subpriority - assign supbriority */
 void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority);
+
+/*----------------------------------------------------------*/
+//Memory access in bit band region
+
+//Get address value from pointer
+#define CADDR(x) ((unsigned long)&(x))
+
+//Access to memory pointed by addr
+#define MADDR(x) *((volatile unsigned long*)(x))
+
+//Calculate bit band addr
+#define BBAND(a,b) (((a)&0xF0000000)+0x02000000+(((a)&0xFFFFF)<<5)+((b)<<2))
+
+//Access to bit addresable memory region
+#define BITBAND(addr,bit) MADDR(BBAND(CADDR(addr),bit))
+
+/*----------------------------------------------------------*/
+//Sleep mode wait for interrupt macro
+
+#define wfi() asm volatile("wfi")
 
 /*----------------------------------------------------------*/
 
