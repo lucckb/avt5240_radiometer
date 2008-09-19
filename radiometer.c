@@ -12,7 +12,8 @@
 //Initialize system perhiperals
 static void perhiph_init(void)
 {
-	 //Initialize system perhiperals
+	 
+	  //Initialize system perhiperals
 	  system_setup();		
 	  //Enable PWM generation
 	  lcd_pwm_setup();   
@@ -29,7 +30,9 @@ static void perhiph_init(void)
 	  //Enable AC converter
 	  adc_setup();
 	  //Initialize kbd
-	  keyb_setup();  
+	  keyb_setup();
+	  //Initialize watchdog
+	  iwdt_setup(IWDG_Prescaler_16,0xFFF);
 }
 
 
@@ -51,7 +54,7 @@ static void introduction(void)
 	 * please do not use wfi at startup 
 	 * when core is disabled jtag cannot start program
 	 * flash memory */
-	while(timer_get(DISPLAY_TIMER));
+	while(timer_get(DISPLAY_TIMER)) iwdt_reset();
 	
 	//Enable buzer alarm
 	buzer_alarm(false);
@@ -93,6 +96,7 @@ int main(void)
     }
     timer_set(DISPLAY_TIMER,HZ/5);
     while(timer_get(DISPLAY_TIMER)) wfi();
+    iwdt_reset();
   }
 }
 

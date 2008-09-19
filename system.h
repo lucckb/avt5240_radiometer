@@ -65,5 +65,19 @@ void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority)
 #define wfi() asm volatile("wfi")
 
 /*----------------------------------------------------------*/
+/* Configure watchdog with selected 
+ * @param prescaler - prescaler value
+ * @param reload - reload value */
+void iwdt_setup(uint8_t prescaler,uint16_t reload);
+
+/*----------------------------------------------------------*/
+
+/* KR register bit mask */
+#define KR_KEY_Reload    ((u16)0xAAAA)
+
+//Reset wdt
+#define iwdt_reset() IWDG->KR = KR_KEY_Reload
+
+/*----------------------------------------------------------*/
 
 #endif /*SYSTEM_H_*/

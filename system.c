@@ -138,4 +138,28 @@ void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority)
 	SCB->SHPR[tmp1] &= ~handlermask;
 	SCB->SHPR[tmp1] |= tmppriority;
 }
+
 /*----------------------------------------------------------*/
+/* KR register bit mask */
+#define KR_KEY_Reload    ((u16)0xAAAA)
+#define KR_KEY_Enable    ((u16)0xCCCC)
+
+
+/* Configure watchdog with selected 
+ * @param prescaler - prescaler value
+ * @param reload - reload value */
+
+void iwdt_setup(uint8_t prescaler,uint16_t reload)
+{
+	//Enable write access to wdt
+	IWDG->KR = IWDG_WriteAccess_Enable;
+	//Program prescaler 
+	IWDG->PR = prescaler;
+	//Set reload value
+	IWDG->RLR = reload;
+	//Reload register
+	IWDG->KR = KR_KEY_Reload;
+	//Watchdog enable
+	IWDG->KR = KR_KEY_Enable;
+}
+
