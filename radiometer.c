@@ -41,14 +41,17 @@ static void introduction(void)
 	//Write initial message
 	lcd_printf("BF-R10");
 	lcd_setpos(1,2);
-	lcd_printf("ver0.1");
+	lcd_printf("ver0.11");
 	//Enable buzzer 
 	buzer_alarm(true);
 	//Wait a while
 	timer_set(DISPLAY_TIMER,HZ);
 	
-	//Wait a while
-	while(timer_get(DISPLAY_TIMER)) wfi();
+	/* Wait a while without wfi
+	 * please do not use wfi at startup 
+	 * when core is disabled jtag cannot start program
+	 * flash memory */
+	while(timer_get(DISPLAY_TIMER));
 	
 	//Enable buzer alarm
 	buzer_alarm(false);
