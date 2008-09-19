@@ -103,7 +103,7 @@ int get_radiation(enum radiationMode mode)
 #define CCER_CC1E (1<<0)				//Enable compare capture CH1
 #define CCER_CC1P (1<<1)				//Falling edge
 #define CCMR1_CH1_MASK 0xff00			//Channel 1 mask
-#define CCMR1_CH1_FILTER_F4_N8 (7<<4)	//Filter settings
+#define CCMR1_CH1_FILTER_F1_N4 2	    //Filter settings
 #define CCMR1_CC1S_IC1_TI1 1			//Input mode
 #define SR_CC1IF (1<<1)					//Comp/Cap CH1 pending bit
 #define SR_UIF (1<<0)					//Update Tim pending bit
@@ -160,14 +160,13 @@ void setup_radiation(enum radiationCountMode mode)
 		TIM2->CCER &= ~CCER_CC1E;
 		TIM2->PSC = 0;
 		//Configure timer for counting external events
-		TIM2->SMCR = SMCR_ETP | SMCR_ECE | (CCMR1_CH1_FILTER_F4_N8<<8);
+		TIM2->SMCR = SMCR_ETP | SMCR_ECE | (CCMR1_CH1_FILTER_F1_N4<<8);
 		//Enable IRQ Overflow
 		TIM2->DIER |= DIER_UIE; 
 	}
 	//Extended counting mode based on sample time
 	else
 	{
-		
 		//Prescaler for 5us pulse
 		TIM2->PSC = 39;
 		//Disable external counting mode
@@ -176,8 +175,8 @@ void setup_radiation(enum radiationCountMode mode)
 		TIM2->CCER &= ~CCER_CC1E;
 		//Setup CAP1 channel
 		TIM2->CCMR1 &= CCMR1_CH1_MASK;
-		//Filter length N=8 f=f/4
-		TIM2->CCMR1 |= CCMR1_CH1_FILTER_F4_N8;
+		//Filter length N=4 f=f
+		TIM2->CCMR1 |= CCMR1_CH1_FILTER_F1_N4 << 4;
 		//Select input from CH1
 		TIM2->CCMR1 |= CCMR1_CC1S_IC1_TI1;
 		//Enable capture channel falling edge
