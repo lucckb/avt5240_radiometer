@@ -18,14 +18,14 @@
 //Led timeout
 #define LED_TIMEOUT 6
 
-//Samples buffer length 
+//Samples buffer length
 #define SAMPLEBUF_LENGTH (radiationCountHIGH + SAMPLEBUF_MARGIN)
 
-//Sample length for radiation 
+//Sample length for radiation
 static volatile unsigned short samplesLength;
 
 //Exposion dose last in standard alg
-static volatile int expDoseLast; 
+static volatile int radiationLast;
 
 //High halfword of timer TIM2
 static volatile unsigned short timerHi;
@@ -36,7 +36,7 @@ static volatile unsigned int samples[SAMPLEBUF_LENGTH+1];
 //Current sample position counter
 static volatile unsigned short samplesWrPos;
 
- 
+
 /*----------------------------------------------------------*/
 //Calculate current radiation
 static int calcstd_radiation(void)
@@ -44,15 +44,15 @@ static int calcstd_radiation(void)
 	uint32_t diff;
 	uint64_t sum = 0;
 	uint32_t n = 0;
-	
-	for( 
+
+	for(
 		 uint32_t i=0,sWr=samplesWrPos,
 		 i0=(sWr+samplesLength+SAMPLEBUF_MARGIN-1)%(samplesLength+SAMPLEBUF_MARGIN),
 		 i1= (sWr+samplesLength+SAMPLEBUF_MARGIN-2)%(samplesLength+SAMPLEBUF_MARGIN) ;
 		 i<samplesLength-1 ;
 		 i++,
 		 i0=(samplesLength+SAMPLEBUF_MARGIN-1+i0)%(samplesLength+SAMPLEBUF_MARGIN),
-		 i1=(samplesLength+SAMPLEBUF_MARGIN-1+i1)%(samplesLength+SAMPLEBUF_MARGIN) 
+		 i1=(samplesLength+SAMPLEBUF_MARGIN-1+i1)%(samplesLength+SAMPLEBUF_MARGIN)
 	    )
 	{
 		diff = samples[i0] - samples[i1];
@@ -64,7 +64,7 @@ static int calcstd_radiation(void)
 	}
 	//Too small samples count
     if(n<9) return 0;
-    //Calculate dose 
+    //Calculate dose
     return 8000000.0 / ( (float)sum / (float)n ) + 0.5 ;
 }
 
@@ -88,7 +88,7 @@ int get_radiation(enum radiationMode mode)
 		}
 	//Get last valid exp dose in standard algorithm
 	case radiationLAST:
-		return expDoseLast; 
+		return radiationLast;
 	}
 	return -1;
 }
@@ -109,7 +109,7 @@ int get_radiation(enum radiationMode mode)
 #define SR_CC1IF (1<<1)					//Comp/Cap CH1 pending bit
 #define SR_UIF (1<<0)					//Update Tim pending bit
 #define DIER_UIE (1<<0)					//Update interrupt register
-#define CR1_URS (1<<2)					//Overflow update 
+#define CR1_URS (1<<2)					//Overflow update
 
 #define GPIO_LED_Mask 0xfffff0ff		//GPIO Led mask
 #define GPIO_MODE_10MHZ 1				//GpioMode 10M
@@ -123,16 +123,16 @@ int get_radiation(enum radiationMode mode)
 //Setup counter with standard russian counting alg.
 void setup_radiation(enum radiationCountMode mode)
 {
-	
+
 	//Disable  nvic channel interrupt
 	nvic_irq_enable(TIM2_IRQChannel,false);
-	
+
 	//Setup sample alghoritm
 	samplesLength = mode;
-	
+
 	//Setup higest priority for this int
 	nvic_irq_priority(TIM2_IRQChannel,0,0);
-	
+
 	//Enable APB perhiperal
 	RCC->APB2ENR |= RCC_APB2Periph_GPIOA;
 	RCC->APB1ENR |= RCC_APB1Periph_TIM2;
@@ -145,15 +145,15 @@ void setup_radiation(enum radiationCountMode mode)
 	 GPIOA->CRL &= GPIO_LED_Mask;
 	 GPIOA->CRL |= GPIO_MODE_10MHZ<<8;
 	 LED_OFF();
-	
+
 	//Disable and reset timer
 	TIM2->CR1 = CR1_URS;
 	//Disable interrupt
 	TIM2->DIER = 0;
-	
+
 	//Reset current timer value
 	timerHi = 0;
-	
+
 	//Standard counting based on russian devices
 	if(mode==radiationCountSTD)
 	{
@@ -163,7 +163,7 @@ void setup_radiation(enum radiationCountMode mode)
 		//Configure timer for counting external events
 		TIM2->SMCR = SMCR_ETP | SMCR_ECE | (CCMR1_CH1_FILTER_F1_N4<<8);
 		//Enable IRQ Overflow
-		TIM2->DIER |= DIER_UIE; 
+		TIM2->DIER |= DIER_UIE;
 	}
 	//Extended counting mode based on sample time
 	else
@@ -182,11 +182,11 @@ void setup_radiation(enum radiationCountMode mode)
 		TIM2->CCMR1 |= CCMR1_CC1S_IC1_TI1;
 		//Enable capture channel falling edge
 		TIM2->CCER |= CCER_CC1E | CCER_CC1P;
-		
+
 		//Enable IRQ capture channel 1
 		TIM2->DIER |= DIER_CC1IE;
 		//Enable IRQ Overflow
-		TIM2->DIER |= DIER_UIE; 
+		TIM2->DIER |= DIER_UIE;
 	}
 	//Enable nvic channel
 	nvic_irq_enable(TIM2_IRQChannel,true);
@@ -198,7 +198,7 @@ void setup_radiation(enum radiationCountMode mode)
 
 volatile short TimLed;
 
-//Timer 2 exception handler 
+//Timer 2 exception handler
 void timer2_handler(void) __attribute__((__interrupt__));
 void timer2_handler(void)
 {
@@ -237,7 +237,7 @@ void on_radiation_timeout_event(void)
 	{
 		if(samplesLength==0)
 		{
-			expDoseLast = TIM2->CNT;
+			radiationLast = ((uint32_t)timerHi << 16) | TIM2->CNT;
 			TIM2->CNT = 0;
 		}
 		Tim40s = HZ * 40;

@@ -12,7 +12,7 @@ OPT 	= s
 
 
 #Common flags 
-COMMON_FLAGS = -Wall 
+COMMON_FLAGS = -Wall -fshort-enums
 
 #Opcje kompilatora C
 CFLAGS += $(COMMON_FLAGS)

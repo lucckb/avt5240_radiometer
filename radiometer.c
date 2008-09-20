@@ -6,17 +6,20 @@
 #include "adc.h"
 #include "events.h"
 #include "buzer.h"
+#include "display.h"
+
 
 
 /*----------------------------------------------------------*/
+
 //Initialize system perhiperals
 static void perhiph_init(void)
 {
-	 
+
 	  //Initialize system perhiperals
-	  system_setup();		
+	  system_setup();
 	  //Enable PWM generation
-	  lcd_pwm_setup();   
+	  lcd_pwm_setup();
 	  //Initialize LCD
 	  lcd_init();
 	  //1 bit for preemtion priority
@@ -26,7 +29,7 @@ static void perhiph_init(void)
 	  //Setup system timer to 0,01 s
 	  systick_setup(10000);
 	  //Enable rtc
-	  rtc_setup();  
+	  rtc_setup();
 	  //Enable AC converter
 	  adc_setup();
 	  //Initialize kbd
@@ -42,61 +45,97 @@ static void perhiph_init(void)
 static void introduction(void)
 {
 	//Write initial message
-	lcd_printf("BF-R10");
+	lcd_printf("BoFF-R10");
 	lcd_setpos(1,2);
 	lcd_printf("ver0.11");
-	//Enable buzzer 
+	//Enable buzzer
 	buzer_alarm(true);
 	//Wait a while
 	timer_set(DISPLAY_TIMER,HZ);
-	
-	/* Wait a while without wfi
-	 * please do not use wfi at startup 
-	 * when core is disabled jtag cannot start program
-	 * flash memory */
-	while(timer_get(DISPLAY_TIMER)) iwdt_reset();
-	
+
+	//Wait for timer
+	while(timer_get(DISPLAY_TIMER))
+	{
+		iwdt_reset();
+		wfi();
+	}
+
 	//Enable buzer alarm
 	buzer_alarm(false);
-	
+
+}
+
+
+/*----------------------------------------------------------*/
+
+//Calculate global dose task
+static void calculate_radiation_task(appState *app)
+{
+
 }
 
 /*----------------------------------------------------------*/
-//Main core function
-int main(void)
+//Check battery state
+static void battery_check_task(appState *app)
 {
-  
-  //Initialize system Perhipherals
+
+}
+
+
+/*----------------------------------------------------------*/
+//Keyboyard task
+static void keyb_task(appState *app)
+{
+
+}
+
+/*----------------------------------------------------------*/
+//Global application state
+static appState app;
+
+/*----------------------------------------------------------*/
+void main(void) __attribute__ ((noreturn));
+
+//Main core function
+void main(void)
+{
+  //Initialize system devices
   perhiph_init();
-  
+
   //Introduction menu
   introduction();
-  
-  //Enable standard counting algoritm
-  setup_radiation(radiationCountMEDIUM);
- 
-  //rtc_bkp_write(1,1979);
-  rtc_bkp_write(10,7711);
-  
-  int radiation;
-  
-  
+
+  lcd_clear();
+  lcd_setpos(1,1);
+  lcd_printf("44");
+  lcd_setpos(1,2);
+  lcd_printf("uR/h");
+
+  while(1) iwdt_reset();
+
   while(1)
   {
-    lcd_printf("        ");
-    radiation = get_radiation(radiationCURRENT);
-    lcd_setpos(1,2);
-    if(radiation==0)
-    {
-    	lcd_printf("-----");
-    }
-    else
-    {
-    	lcd_printf("%duRh",radiation);
-    }
-    timer_set(DISPLAY_TIMER,HZ/5);
-    while(timer_get(DISPLAY_TIMER)) wfi();
-    iwdt_reset();
+	  //Calculate dose task
+	  calculate_radiation_task(&app);
+
+	  //Batery check task
+	  battery_check_task(&app);
+
+	  //Keyboyard task
+	  keyb_task(&app);
+
+	  //LCD display task
+	  if(timer_get(DISPLAY_TIMER)==0)
+	  {
+		  timer_set(DISPLAY_TIMER,DISPLAY_REFRESH);
+		  disp_funcs[app.menu](&app);
+	  }
+
+	  //Reset watchdog
+	  iwdt_reset();
+
+	  //Switch CPU to idle mode
+	  wfi();
   }
 }
 

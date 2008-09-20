@@ -21,7 +21,7 @@ void system_setup(void);
 
 /*----------------------------------------------------------*/
 
-//Setup NVIC priority group 
+//Setup NVIC priority group
 void nvic_priority_group(uint32_t group);
 
 /*----------------------------------------------------------*/
@@ -62,10 +62,14 @@ void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority)
 /*----------------------------------------------------------*/
 //Sleep mode wait for interrupt macro
 
+#ifndef PDEBUG
 #define wfi() asm volatile("wfi")
+#else
+#define wfi()
+#endif
 
 /*----------------------------------------------------------*/
-/* Configure watchdog with selected 
+/* Configure watchdog with selected
  * @param prescaler - prescaler value
  * @param reload - reload value */
 void iwdt_setup(uint8_t prescaler,uint16_t reload);
