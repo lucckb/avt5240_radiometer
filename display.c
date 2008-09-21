@@ -95,8 +95,8 @@ static void display_max_radiation(appState *app)
 		struct rtc_tm tm;
 		rtc_localtime(app->radiationMaxTime,&tm);
 		lcd_setpos(1,2);
-		lcd_printf("%02d:%02d:%02d ",tm.tm_hour,tm.tm_min,tm.tm_sec);
-		lcd_printf("%02d-%02d-%04d",tm.tm_mday,tm.tm_mon,tm.tm_year);
+		lcd_printf("%02u:%02u:%02u ",tm.tm_hour,tm.tm_min,tm.tm_sec);
+		lcd_printf("%02u-%02u-%04u",tm.tm_mday,tm.tm_mon,tm.tm_year+1900);
 	}
 	else if(app->scrollPos<29 && app->scrollPos>6  && (app->scrollPos&1))
 	{
@@ -161,9 +161,9 @@ static void display_date(appState *app)
 	struct rtc_tm tm;
 	rtc_localtime(rtc_get(),&tm);
 	lcd_setpos(1,1);
-	lcd_printf("%02d:%02d:%02d ",tm.tm_hour,tm.tm_min,tm.tm_sec);
+	lcd_printf("%02u:%02u:%02u ",tm.tm_hour,tm.tm_min,tm.tm_sec);
 	lcd_setpos(1,2);
-	lcd_printf("%02d-%02d-%04d",tm.tm_mday,tm.tm_mon,tm.tm_year);
+	lcd_printf("%02u-%02u-%02u",tm.tm_mday,tm.tm_mon,tm.tm_year+1900-2000);
 }
 
 /*----------------------------------------------------------*/
