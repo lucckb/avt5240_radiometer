@@ -51,7 +51,7 @@ typedef struct appState
 	//Unit configuration
 	enum unitConfig unit;
 	//Radiation dose
-	unsigned int dose;
+	uint64_t dose;
 	//Radiation max
 	int radiationMax;
 	//Radiation max timestamp

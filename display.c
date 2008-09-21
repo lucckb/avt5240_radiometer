@@ -121,13 +121,21 @@ static void display_dose(appState *app)
 	lcd_command(LCD_CURSOR_HOME);
 	//goto line 1
 	lcd_setpos(1,1);
+
+	//Current dose in uR/h
+	uint64_t dose = app->dose / 60;
+
 	if(app->unit==unitCLASSIC)
 	{
-		lcd_printf("%u.%02u    ",(app->dose*6)/100,(app->dose*6)%100);
+		uint32_t dose_c = dose/1000;
+		uint32_t dose_r = dose%1000;
+		lcd_printf("%u.%03u   ",dose_c,dose_r);
 	}
 	else
 	{
-		lcd_printf("%u.%04u  ",(app->dose*6)/10000,(app->dose*6)%10000);
+		uint32_t dose_c = dose/100000;
+		uint32_t dose_r = dose%100000;
+		lcd_printf("%u.%05u ",dose_c,dose_r);
 	}
 	//goto line 2
 	lcd_setpos(1,2);
