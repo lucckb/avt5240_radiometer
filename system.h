@@ -83,5 +83,41 @@ void iwdt_setup(uint8_t prescaler,uint16_t reload);
 #define iwdt_reset() IWDG->KR = KR_KEY_Reload
 
 /*----------------------------------------------------------*/
+//Try write atomic if success return 0
+static inline long atomic_try_writeb(volatile uint8_t *addr,uint8_t val)
+{
+	long lock;
+	asm volatile
+	(
+		"ldrexb %0,[%1]\n"
+		"strexb %0,%2,[%1]\n"
+		: "=&r"(lock)
+		: "r"(addr),"r"(val)
+		: "cc"
+	);
+	return lock;
+}
+
+/*----------------------------------------------------------*/
+
+//Atomic exchange byte
+static inline uint8_t atomic_xchg_byte(volatile uint8_t *addr,uint8_t val)
+{
+	uint8_t ret;
+	unsigned long tmp;
+	asm volatile
+	(
+	"1:	ldrexb %0,[%2]\n"
+	   "strexb %1,%3,[%2]\n"
+	   "teq %1,#0\n"
+	   "bne 1b\n"
+		: "=&r"(ret),"=&r"(tmp)
+		: "r"(addr),"r"(val)
+		: "cc"
+	);
+	return ret;
+}
+
+/*----------------------------------------------------------*/
 
 #endif /*SYSTEM_H_*/

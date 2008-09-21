@@ -8,6 +8,12 @@
 #include "buzer.h"
 #include "display.h"
 
+/*----------------------------------------------------------*/
+//Calculate dose refresh
+#define DOSE_REFRESH 60*HZ
+
+//Radiation refresh
+#define MAXRADIATION_REFRESH 5*HZ
 
 
 /*----------------------------------------------------------*/
@@ -116,9 +122,30 @@ static void battery_check_task(appState *app)
 
 /*----------------------------------------------------------*/
 //Keyboyard task
-static void keyb_task(appState *app)
+static void calc_radiation_task(appState *app)
 {
+	 //Add dose evry 1min
+	 if(timer_get(DOSE_TIMER)==0)
+	 {
+		 timer_set(DOSE_TIMER,DOSE_REFRESH);
+		 app->dose += get_radiation(radiationCURRENT);
+	 }
+	 //Max radiation every 5 seconds
+	 if(timer_get(MAXRAD_TIMER)==0)
+	 {
 
+		//Timer radiation refresh
+		timer_set(MAXRAD_TIMER,MAXRADIATION_REFRESH);
+		//Get radiation
+		int rad = get_radiation(radiationCURRENT);
+		//Check for max value
+		if(rad>app->radiationMax)
+		{
+			//Get radiation and get rtc time
+			app->radiationMax = rad;
+			app->radiationMaxTime = rtc_get();
+		}
+	 }
 }
 
 /*----------------------------------------------------------*/
@@ -143,19 +170,18 @@ void main(void)
 
   setup_radiation(radiationCountMEDIUM);
   app.radiationAlgo = radiationCountMEDIUM;
-  app.unit = unitSI;
+  //app.unit = unitSI;
 
   //Setup dose timer
-  timer_set(DOSE_TIMER,60*HZ);
+  timer_set(DOSE_TIMER,DOSE_REFRESH);
+  //Setup radiation timer
+  timer_set(MAXRAD_TIMER,MAXRADIATION_REFRESH);
 
   while(1)
   {
-      //Add dose evry 1min
-      if(timer_get(DOSE_TIMER)==0)
-      {
-    	  timer_set(DOSE_TIMER,60*HZ);
-    	  app.dose += get_radiation(radiationCURRENT);
-      }
+
+	  //Calculate radiation task
+	  calc_radiation_task(&app);
 
 	  //Batery check task
 	  battery_check_task(&app);
@@ -166,7 +192,8 @@ void main(void)
 	  //LCD display task
 	  if(timer_get(DISPLAY_TIMER)==0)
 	  {
-		  timer_set(DISPLAY_TIMER,DISPLAY_REFRESH);
+		  //On max radiation slow refresh for scroling
+		  timer_set(DISPLAY_TIMER,HZ/4);
 		  disp_funcs[app.menu](&app);
 	  }
 

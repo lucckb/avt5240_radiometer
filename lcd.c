@@ -73,7 +73,7 @@ static inline void wr_data(uint8_t d_7_4_val)
 
 
 /*----------------------------------------------------------*/
-//Read data from LCD bus 
+//Read data from LCD bus
 static inline uint8_t rd_data(void)
 {
 	return ((LCD_PORT->IDR>>12)<<4)& 0xf0;
@@ -93,7 +93,7 @@ static inline void dataport_dir(bool out)
        LCD_PORT->CRH &= ~LCD_GPIO_DATA_CRH_MASK;
        LCD_PORT->CRH |= (GPIO_MODE_10MHZ << 28) | (GPIO_MODE_10MHZ << 24) |
        				(GPIO_MODE_10MHZ << 20) | (GPIO_MODE_10MHZ << 16);
-       
+
     }
     else
     {
@@ -102,28 +102,28 @@ static inline void dataport_dir(bool out)
        LCD_PORT->CRH |= (GPIO_MODE_PULLUP_INPUT << 30) | (GPIO_MODE_PULLUP_INPUT << 26) |
        					(GPIO_MODE_PULLUP_INPUT << 22) | (GPIO_MODE_PULLUP_INPUT << 18);
        //Pull up configuration
-       LCD_PORT->ODR |= LCD_DATA_BITS_MASK; 
+       LCD_PORT->ODR |= LCD_DATA_BITS_MASK;
     }
 }
 
 /*----------------------------------------------------------*/
 
-/** GPIO Initialize 
- * Initialize bit 15-9 in LCD port 
+/** GPIO Initialize
+ * Initialize bit 15-9 in LCD port
  **/
 static void gpio_init(void)
 {
 
 	/* Enable GPIOC clock */
     RCC->APB2ENR |= LCD_APB_CLOCK_BIT;
-    
+
     //Output mode 10MHz bit15-bit12
     LCD_PORT->CRH &= ~LCD_GPIO_ALL_CRH_MASK;
     LCD_PORT->CRH |= (GPIO_MODE_10MHZ << 28) | (GPIO_MODE_10MHZ << 24) |
            			  (GPIO_MODE_10MHZ << 20) | (GPIO_MODE_10MHZ << 16) |
-           			  (GPIO_MODE_10MHZ << 12) | (GPIO_MODE_10MHZ << 8) | 
+           			  (GPIO_MODE_10MHZ << 12) | (GPIO_MODE_10MHZ << 8) |
            			  (GPIO_MODE_10MHZ << 4);
- 
+
 }
 
 /*----------------------------------------------------------*/
@@ -188,10 +188,10 @@ static void write_lcd(uint8_t val,bool command)
 //Inicjalizacja modulu LCD
 void lcd_init(void)
 {
-    
+
 	//Initialize gpio
 	gpio_init();
-	
+
     en(0); rw(0); en(0);
 
     wr_data(0x30);
@@ -249,9 +249,9 @@ void lcd_putch(char ch)
 
 /*----------------------------------------------------------*/
 //Wyslij rozkaz
-void lcd_command(uint8_t disp,uint8_t blink,uint8_t cursor)
+void lcd_command(uint8_t cmd)
 {
-    write_lcd(disp+blink+cursor+0x08,1);
+    write_lcd(cmd,1);
     wait4lcd();
 }
 
@@ -425,7 +425,7 @@ static int print(char **out, const char *format, va_list args )
 int lcd_printf(const char *format, ...)
 {
         va_list args;
-        
+
         va_start( args, format );
         return print( 0, format, args );
 }

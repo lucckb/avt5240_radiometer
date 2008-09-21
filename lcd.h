@@ -37,20 +37,23 @@ void lcd_puts(char *nap);
 void lcd_clear(void);
 
 /*----------------------------------------------------*/
+//Shift display to right
+#define LCD_SHIFT_RIGHT 0x1A
 
+//Shift display to left
+#define LCD_SHIFT_LEFT 0x18
+
+//Cursor to home position
+#define LCD_CURSOR_HOME 0x02
+
+/*----------------------------------------------------*/
 //Wyswietl znak
 void lcd_putch(char ch);
 
 /*----------------------------------------------------*/
 //Send command
-#define LCD_BLINK     0x01    // Alias for blinking cursor
-#define LCD_NOBLINK   0x00    // Alias for non blinking cursor
-#define LCD_SHOW      0x02    // Alias for cursor on
-#define LCD_HIDE      0x00    // Alias for cursor off
-#define LCD_ON        0x04    // Alias for display on
-#define LCD_OFF       0x00    // Alias for display off
 
-void lcd_command(uint8_t disp,uint8_t blink,uint8_t cursor);
+void lcd_command(uint8_t cmd);
 
 
 /*----------------------------------------------------*/

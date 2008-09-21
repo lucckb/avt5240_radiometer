@@ -13,8 +13,7 @@
 #include "rtc.h"
 /*----------------------------------------------------------*/
 
-//Display refresh interval
-#define DISPLAY_REFRESH HZ/5
+
 
 /*----------------------------------------------------------*/
 
@@ -54,11 +53,13 @@ typedef struct appState
 	//Radiation dose
 	unsigned int dose;
 	//Radiation max
-	unsigned int radiationMax;
+	int radiationMax;
 	//Radiation max timestamp
 	time_t radiationMaxTime;
 	//Power voltage in ten mV
 	int Vpwr;
+	//Define cursor position in scrolling
+	uint8_t scrollPos;
 
 } appState;
 
@@ -71,6 +72,11 @@ typedef void (*appfn_ptr)(appState *);
 
 //Global display functions
 extern const appfn_ptr disp_funcs[];
+
+/*----------------------------------------------------------*/
+
+//Keyboyard support function
+extern appfn_ptr keyb_task;
 
 /*----------------------------------------------------------*/
 #endif /* DISPLAY_H_ */

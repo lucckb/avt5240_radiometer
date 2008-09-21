@@ -6,7 +6,7 @@
 /*----------------------------------------------------------*/
 
 //PWR control register
-#define PWR_CR (*(volatile uint32_t*)0x40007000) 
+#define PWR_CR (*(volatile uint32_t*)0x40007000)
 //Enable access to backup domain and RTC
 #define PWR_CR_DBP (1<<8)
 //Enable LSE oscilator
@@ -18,17 +18,17 @@
 //Enable RTC clock bit
 #define BDCR_RTC_EN (1<<15)
 //Configuration Flag Enable Mask
-#define CRL_CNF_Set      ((u16)0x0010)       
+#define CRL_CNF_Set      ((u16)0x0010)
 //Configuration Flag Disable Mask
-#define CRL_CNF_Reset    ((u16)0xFFEF)       
+#define CRL_CNF_Reset    ((u16)0xFFEF)
 
 /*----------------------------------------------------------*/
 //Wait for sync
 static void rtc_wait_for_sync(void)
 {
-	 // Clear RSF flag 
+	 // Clear RSF flag
 	  RTC->CRL &= ~RTC_FLAG_RSF;
-	 // Loop until RSF flag is set 
+	 // Loop until RSF flag is set
 	  while ((RTC->CRL & RTC_FLAG_RSF) == 0);
 }
 
@@ -61,24 +61,24 @@ int rtc_setup(void)
 	RCC->BDCR |= RCC_RTCCLKSource_LSE;
 	//Enable RTC clock
 	RCC->BDCR |= BDCR_RTC_EN;
-	
+
 	//Wait for synchronization
 	rtc_wait_for_sync();
 	//Wait for write
 	rtc_wait_for_last_write();
-	
+
 	/* Enable configuration */
 	 RTC->CRL |= CRL_CNF_Set;
-	//RTC set prescaler 
+	//RTC set prescaler
 	RTC->PRLH = 0;
 	RTC->PRLL = 32768;
 	/* Disable configuration */
     RTC->CRL &= CRL_CNF_Reset;
-    
+
     //Wait for write
     rtc_wait_for_last_write();
-    
-    
+
+
 	return EXIT_SUCCESS;
 }
 
@@ -142,7 +142,7 @@ long _timezone = 0;                 // Difference in seconds between GMT and loc
 
 /*----------------------------------------------------------*/
 
-static const int _ytab[2][12] = 
+static const int _ytab[2][12] =
 {
   {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
   {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
@@ -150,9 +150,8 @@ static const int _ytab[2][12] =
 
 /*----------------------------------------------------------*/
 
-struct rtc_tm *rtc_gmtime(const time_t *timer, struct rtc_tm *tmbuf)
+struct rtc_tm *rtc_gmtime(time_t time, struct rtc_tm *tmbuf)
 {
-  time_t time = *timer;
   unsigned long dayclock, dayno;
   int year = EPOCH_YR;
 
@@ -163,7 +162,7 @@ struct rtc_tm *rtc_gmtime(const time_t *timer, struct rtc_tm *tmbuf)
   tmbuf->tm_min = (dayclock % 3600) / 60;
   tmbuf->tm_hour = dayclock / 3600;
   tmbuf->tm_wday = (dayno + 4) % 7; // Day 0 was a thursday
-  while (dayno >= (unsigned long) YEARSIZE(year)) 
+  while (dayno >= (unsigned long) YEARSIZE(year))
   {
     dayno -= YEARSIZE(year);
     year++;
@@ -171,7 +170,7 @@ struct rtc_tm *rtc_gmtime(const time_t *timer, struct rtc_tm *tmbuf)
   tmbuf->tm_year = year - YEAR0;
   tmbuf->tm_yday = dayno;
   tmbuf->tm_mon = 0;
-  while (dayno >= (unsigned long) _ytab[LEAPYEAR(year)][tmbuf->tm_mon]) 
+  while (dayno >= (unsigned long) _ytab[LEAPYEAR(year)][tmbuf->tm_mon])
   {
     dayno -= _ytab[LEAPYEAR(year)][tmbuf->tm_mon];
     tmbuf->tm_mon++;
@@ -183,12 +182,12 @@ struct rtc_tm *rtc_gmtime(const time_t *timer, struct rtc_tm *tmbuf)
 }
 
 /*----------------------------------------------------------*/
-struct rtc_tm *rtc_localtime(const time_t *timer, struct rtc_tm *tmbuf)
+struct rtc_tm *rtc_localtime(time_t timer, struct rtc_tm *tmbuf)
 {
   time_t t;
 
-  t = *timer - _timezone;
-  return rtc_gmtime(&t, tmbuf);
+  t = timer - _timezone;
+  return rtc_gmtime(t, tmbuf);
 }
 
 /*----------------------------------------------------------*/
@@ -203,46 +202,46 @@ time_t rtc_mktime(struct rtc_tm *tmbuf)
 
   tmbuf->tm_min += tmbuf->tm_sec / 60;
   tmbuf->tm_sec %= 60;
-  if (tmbuf->tm_sec < 0) 
+  if (tmbuf->tm_sec < 0)
   {
     tmbuf->tm_sec += 60;
     tmbuf->tm_min--;
   }
   tmbuf->tm_hour += tmbuf->tm_min / 60;
   tmbuf->tm_min = tmbuf->tm_min % 60;
-  if (tmbuf->tm_min < 0) 
+  if (tmbuf->tm_min < 0)
   {
     tmbuf->tm_min += 60;
     tmbuf->tm_hour--;
   }
   day = tmbuf->tm_hour / 24;
   tmbuf->tm_hour= tmbuf->tm_hour % 24;
-  if (tmbuf->tm_hour < 0) 
+  if (tmbuf->tm_hour < 0)
   {
     tmbuf->tm_hour += 24;
     day--;
   }
   tmbuf->tm_year += tmbuf->tm_mon / 12;
   tmbuf->tm_mon %= 12;
-  if (tmbuf->tm_mon < 0) 
+  if (tmbuf->tm_mon < 0)
   {
     tmbuf->tm_mon += 12;
     tmbuf->tm_year--;
   }
   day += (tmbuf->tm_mday - 1);
-  while (day < 0) 
+  while (day < 0)
   {
-    if(--tmbuf->tm_mon < 0) 
+    if(--tmbuf->tm_mon < 0)
     {
       tmbuf->tm_year--;
       tmbuf->tm_mon = 11;
     }
     day += _ytab[LEAPYEAR(YEAR0 + tmbuf->tm_year)][tmbuf->tm_mon];
   }
-  while (day >= _ytab[LEAPYEAR(YEAR0 + tmbuf->tm_year)][tmbuf->tm_mon]) 
+  while (day >= _ytab[LEAPYEAR(YEAR0 + tmbuf->tm_year)][tmbuf->tm_mon])
   {
     day -= _ytab[LEAPYEAR(YEAR0 + tmbuf->tm_year)][tmbuf->tm_mon];
-    if (++(tmbuf->tm_mon) == 12) 
+    if (++(tmbuf->tm_mon) == 12)
     {
       tmbuf->tm_mon = 0;
       tmbuf->tm_year++;
@@ -295,7 +294,7 @@ time_t rtc_mktime(struct rtc_tm *tmbuf)
 
   if (tmbuf->tm_isdst)
     dst = _dstbias;
-  else 
+  else
     dst = 0;
 
   if (dst > seconds) overflow++;        // dst is always non-negative

@@ -7,7 +7,7 @@
 
 typedef int time_t;
 
-struct rtc_tm 
+struct rtc_tm
 {
     int     tm_sec;         /* sekundy */
     int     tm_min;         /* minuty */
@@ -48,13 +48,13 @@ void rtc_bkp_write(uint8_t addr,uint16_t value);
 
 /*----------------------------------------------------------*/
 
-//Create mktime based on unpacked type 
+//Create mktime based on unpacked type
 time_t rtc_mktime(struct rtc_tm *tmbuf);
 
 /*----------------------------------------------------------*/
 
 //Get localtime base on time_t
-struct rtc_tm *rtc_localtime(const time_t *timer, struct rtc_tm *tmbuf);
+struct rtc_tm *rtc_localtime(time_t time, struct rtc_tm *tmbuf);
 
 
 /*----------------------------------------------------------*/
@@ -65,7 +65,7 @@ time_t rtc_mktime(struct rtc_tm *tmbuf);
 /*----------------------------------------------------------*/
 
 //Get gmt time
-struct rtc_tm *rtc_gmtime(const time_t *timer, struct rtc_tm *tmbuf);
+struct rtc_tm *rtc_gmtime(time_t time, struct rtc_tm *tmbuf);
 
 /*----------------------------------------------------------*/
 
