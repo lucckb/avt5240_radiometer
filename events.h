@@ -6,22 +6,24 @@
 #include <stdint.h>
 
 /*----------------------------------------------------------*/
-//System Hz 
+//System Hz
 #define HZ 100
 
-//Number of timers 
-#define GENERIC_TIMERS 2
+//Number of timers
+#define GENERIC_TIMERS 3
 
 //Define timer assignement
 #define DISPLAY_TIMER 0
+#define DOSE_TIMER 1
+#define BATTERY_TIMER 2
 
 /*----------------------------------------------------------*/
-//System timer set value 
+//System timer set value
 void timer_set(int id,int tick);
 
 /*----------------------------------------------------------*/
 //System timer get value
-int timer_get(int id); 
+int timer_get(int id);
 
 /*----------------------------------------------------------*/
 

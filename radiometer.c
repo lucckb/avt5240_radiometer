@@ -15,7 +15,6 @@
 //Initialize system perhiperals
 static void perhiph_init(void)
 {
-
 	  //Initialize system perhiperals
 	  system_setup();
 	  //Enable PWM generation
@@ -65,20 +64,53 @@ static void introduction(void)
 
 }
 
-
 /*----------------------------------------------------------*/
+//Max value when 3,3V reached
+#define ADC_VMAX 24650
+//Max ADC value
+#define ADC_MAXVAL 4095
 
-//Calculate global dose task
-static void calculate_radiation_task(appState *app)
-{
 
-}
-
-/*----------------------------------------------------------*/
 //Check battery state
 static void battery_check_task(appState *app)
 {
+	static uint8_t cnt = 0;
+	static uint32_t sum = 0;
+    //Start conv and calculate conv 10 times
 
+	//Total 10 measure
+	if(cnt < 20)
+	{
+		if( (cnt & 1) == 0 )
+		{
+			//On odd bits start conv
+			adc_startconv();
+			timer_set(BATTERY_TIMER,2);
+			cnt++;
+		}
+		else
+		{
+			//Od even get adc value
+			if(timer_get(BATTERY_TIMER)==0)
+			{
+				sum += adc_getval();
+				cnt++;
+			}
+		}
+	}
+	else if(cnt==20)
+	{
+		//If 10 get adc val wait 30s
+		app->Vpwr = (((sum/10)*ADC_VMAX)/ADC_MAXVAL)/10;
+		timer_set(BATTERY_TIMER,HZ*30);
+		cnt++;
+		sum = 0;
+	}
+	else
+	{
+		//On timeout start alghoritm again
+		if(timer_get(BATTERY_TIMER)==0) cnt = 0;
+	}
 }
 
 
@@ -90,8 +122,12 @@ static void keyb_task(appState *app)
 }
 
 /*----------------------------------------------------------*/
+
 //Global application state
-static appState app;
+static appState app =
+{
+		Vpwr: -1,
+};
 
 /*----------------------------------------------------------*/
 void main(void) __attribute__ ((noreturn));
@@ -105,18 +141,21 @@ void main(void)
   //Introduction menu
   introduction();
 
-  lcd_clear();
-  lcd_setpos(1,1);
-  lcd_printf("44");
-  lcd_setpos(1,2);
-  lcd_printf("uR/h");
+  setup_radiation(radiationCountMEDIUM);
+  app.radiationAlgo = radiationCountMEDIUM;
+  app.unit = unitSI;
 
-  while(1) iwdt_reset();
+  //Setup dose timer
+  timer_set(DOSE_TIMER,60*HZ);
 
   while(1)
   {
-	  //Calculate dose task
-	  calculate_radiation_task(&app);
+      //Add dose evry 1min
+      if(timer_get(DOSE_TIMER)==0)
+      {
+    	  timer_set(DOSE_TIMER,60*HZ);
+    	  app.dose += get_radiation(radiationCURRENT);
+      }
 
 	  //Batery check task
 	  battery_check_task(&app);
@@ -138,4 +177,3 @@ void main(void)
 	  wfi();
   }
 }
-

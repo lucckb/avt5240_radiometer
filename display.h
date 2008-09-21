@@ -57,6 +57,8 @@ typedef struct appState
 	unsigned int radiationMax;
 	//Radiation max timestamp
 	time_t radiationMaxTime;
+	//Power voltage in ten mV
+	int Vpwr;
 
 } appState;
 

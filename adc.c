@@ -27,52 +27,54 @@
 //Configure ADC
 void adc_setup(void)
 {
-  
-  //Enable analog ADC 
+
+  //Enable analog ADC
   RCC->APB2ENR |= RCC_APB2Periph_ADC1 | RCC_APB2Periph_GPIOA;
-	
+
   //Configure GPIO PA5 as Analog Input
   GPIOA->CRL &= ~GPIO_CRL_PA5_MASK;
-  
-  
-  // Clear DUALMOD and SCAN bits 
+
+
+  // Clear DUALMOD and SCAN bits
   ADC1->CR1 &= CR1_CLEAR_Mask;
-  
+
   //Adc work in independent mode
   ADC1->CR1 |= ADC_Mode_Independent ;
-  
-  // Clear CONT, ALIGN and EXTSEL bits 
+
+  // Clear CONT, ALIGN and EXTSEL bits
   ADC1->CR2 &= CR2_CLEAR_Mask;
-  
+
   // Disable external triger mode
   ADC1->CR2 |=  ADC_ExternalTrigConv_None;
-  
-  // Clear L bits 
+
+  // Clear L bits
   ADC1->SQR1 &= SQR1_CLEAR_Mask;
-  
-  // Write to ADCx SQR1 numer of channels in conversion 
+
+  // Write to ADCx SQR1 numer of channels in conversion
   ADC1->SQR1 |= (0<<20);
-  
+
   //Configure sample timing to 239 on CH5
   ADC1->SMPR2 &= ~ADC_SampleTime_239Cycles5 << 15;
   ADC1->SMPR2 |= ADC_SampleTime_239Cycles5 << 15;
-  
+
   //Select CH5 for first seqence
   ADC1->SQR3 &= SQR_CH_Mask;
   ADC1->SQR3 |= 5;
-  
+
   //Enable ADC
   ADC1->CR2 |= CR2_ADON_Set;
-  
+
   // *Calibration ADC*
   //Initialize calibration register
   ADC1->CR2 |= CR2_RSTCAL_Set;
   //Wait for initialization
-  while (ADC1->CR2 & CR2_RSTCAL_Set);
+  for(int i=0;i<100000;i++)
+	  if((ADC1->CR2 & CR2_RSTCAL_Set) == 0) break;
   //ADC start calibration
   ADC1->CR2 |= CR2_CAL_Set;
   //Wait for calibration
-  while(ADC1->CR2 & CR2_CAL_Set);
+  for(int i=0;i<100000;i++)
+	  if( (ADC1->CR2 & CR2_CAL_Set) == 0) break;
 }
 
 /*----------------------------------------------------------*/

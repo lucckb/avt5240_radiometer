@@ -75,7 +75,7 @@ clean:
 
 
 program:
-	openocd -f scripts/flash.cfg -c init -c 'script scripts/flash.script' -c shutdown || true
+	openocd -f scripts/stm32.cfg -c init -c 'script scripts/flash.script' -c shutdown || true
      
 build:	$(TARGET).elf $(CONVTARGET) $(LSSTARGET)
 

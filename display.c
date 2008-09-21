@@ -12,45 +12,62 @@
 #include "radiation.h"
 
 
-
 /*----------------------------------------------------------*/
 
 //User interface task
 static void display_radiation(appState *app)
 {
+	static bool dispBat = false;
+	//Get radiation
+	int rad = get_radiation(radiationCURRENT);
 
-	int rCurrent = get_radiation(radiationCURRENT);
-	int rLast = get_radiation(radiationLAST);
-
-	//First line measured radiation
-	lcd_setpos(1,1);
-	if(app->unit==unitCLASSIC) lcd_printf("%duR",rCurrent);
-	else lcd_printf("%d.%duS",rCurrent/100,rCurrent%100);
-
-	lcd_setpos(1,2);
-	switch(app->line)
+	if(app->radiationAlgo!= radiationCountSTD)
 	{
-	//Curent counting mode in classic algoritm
-	case lineRADIATION:
+		//Alghoritm 1/n
 		if(app->unit==unitCLASSIC)
-			lcd_printf("%duR",rLast);
+		{
+			lcd_setpos(1,1);
+			if(rad) lcd_printf("%d       ",rad);
+			else lcd_printf("----    ");
+			lcd_setpos(1,2);
+			lcd_printf("uR/h");
+		}
 		else
-			lcd_printf("%d.%duS",rLast/100,rLast%100);
-	break;
-	//Get actual dose
-	case lineDOSE:
+		{
+			lcd_setpos(1,1);
+			if(rad) lcd_printf("%d.%02d    ",rad/100,rad%100);
+			else lcd_printf("----    ");
+			lcd_setpos(1,2);
+			lcd_printf("uS/h");
+		}
+		//Disp bat status indicator
+		if(dispBat)
+		{
+			if(app->Vpwr>400) dispBat = false;
+		}
+		else
+		{
+			if(app->Vpwr<380 && app->Vpwr !=-1) dispBat = true;
+		}
+		//Display status
+		if(dispBat) lcd_printf(" Bat");
+		else if(rad<79) lcd_printf(" Low");
+		else if (rad>=79 && rad<=129) lcd_printf(" Med");
+		else if(rad>129 && rad<=249) lcd_printf(" Hi ");
+		else lcd_printf(" VHi");
+	}
+	else
+	{
+		//Russian standard alghoritm
+		lcd_setpos(1,1);
+
 		if(app->unit==unitCLASSIC)
-			lcd_printf("%d.%dmr",(app->dose*6)/100,((app->dose*6)%100+5)/10);
+			lcd_printf("%duRh    ",rad);
 		else
-			lcd_printf("%d.%duS",(app->dose*6)/10000,((app->dose*6)%10000+5)/10);
-	break;
-	//Radiation description
-	case lineMAX:
-		if(app->unit==unitCLASSIC)
-			lcd_printf("%duR",app->radiationMax);
-		else
-			lcd_printf("%d.%duS",app->radiationMax/100,app->radiationMax%100);
-	break;
+			lcd_printf("%d.%duSh  ",rad);
+
+		lcd_setpos(1,2);
+		lcd_printf("%duRh    ",get_radiation(radiationLAST));
 	}
 }
 
