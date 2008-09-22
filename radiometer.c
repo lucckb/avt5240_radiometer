@@ -192,7 +192,7 @@ void main(void)
 	  //LCD display task
 	  if(timer_get(DISPLAY_TIMER)==0)
 	  {
-		  //On max radiation slow refresh for scroling
+		  //Screen refresh time
 		  timer_set(DISPLAY_TIMER,HZ/4);
 		  disp_funcs[app.menu](&app);
 	  }

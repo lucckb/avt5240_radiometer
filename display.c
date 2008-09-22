@@ -191,7 +191,7 @@ static void display_config (appState *app)
 	lcd_setpos(1,1);
 	lcd_printf("Config? ");
 	lcd_setpos(1,2);
-	lcd_printf("[OK] [N]");
+	lcd_printf("[C] [OK]");
 }
 
 /*----------------------------------------------------------*/
@@ -258,7 +258,28 @@ static void display_dateset(appState *app)
 }
 
 /*----------------------------------------------------------*/
+//Display delete dose
+static void display_deldose(appState *app)
+{
+	lcd_setpos(1,1);
+	lcd_printf("DEL dose");
+	lcd_setpos(1,2);
+	lcd_printf("[C] [OK]");
+}
 
+/*----------------------------------------------------------*/
+//Display delete max
+static void display_delmaxrad(appState *app)
+{
+	//Set cursor to home position
+	lcd_command(LCD_CURSOR_HOME);
+	lcd_setpos(1,1);
+	lcd_printf("DEL max ");
+	lcd_setpos(1,2);
+	lcd_printf("[C] [OK]");
+}
+
+/*----------------------------------------------------------*/
 //Display function pointers
 const appfn_ptr disp_funcs[] =
 {
@@ -271,7 +292,9 @@ const appfn_ptr disp_funcs[] =
 		display_unitset,		//Display unit settings
 		display_algoset,		//Display algo settings
 		display_date,			//Display date in setting
-		display_dateset			//Display dateset
+		display_dateset,		//Display dateset
+		display_deldose,		//Display delete dose
+		display_delmaxrad,		//Display delmax
 };
 
 /*----------------------------------------------------------*/
@@ -280,7 +303,7 @@ const appfn_ptr disp_funcs[] =
 static void keyb_configmenu(appState *app);
 static void keyb_mainmenu(appState *app);
 static void keyb_datemenu(appState *app);
-
+static void keyb_yesno(appState *app);
 /*----------------------------------------------------------*/
 
 //Configure and enter date
@@ -347,6 +370,47 @@ static void keyb_datemenu(appState *app)
 	}
 }
 
+
+/*----------------------------------------------------------*/
+//Yes no decision
+static void keyb_yesno(appState *app)
+{
+	uint8_t key = keyb_get();
+	if(key==KEY_ENTER)
+	{
+		//Jezeli kasujemy dawke
+		if(app->menu==mnuDISP_DELDOSE)
+		{
+			//Skasuj dawke i wyswietl dawke
+			app->dose = 0;
+			app->menu = mnuDISP_DOSE;
+		}
+		else if(app->menu==mnuDISP_DELMAXRAD)
+		{
+			//Skasuj maximum i do menu glownego
+			app->radiationMax = 0;
+			app->menu = mnuMAX_RADIATION;
+			app->scrollPos = 0;
+		}
+		keyb_task = keyb_mainmenu;
+	}
+	else if(key==KEY_ESC)
+	{
+		//Do menu dawki
+		if(app->menu==mnuDISP_DELDOSE)
+		{
+			app->menu = mnuDISP_DOSE;
+		}
+		//Do menu radiacji
+		else if(app->menu==mnuDISP_DELMAXRAD)
+		{
+			app->menu = mnuMAX_RADIATION;
+			app->scrollPos = 0;
+		}
+		keyb_task = keyb_mainmenu;
+	}
+}
+
 /*----------------------------------------------------------*/
 
 //Configuration menu
@@ -401,8 +465,7 @@ static void keyb_configmenu(appState *app)
 }
 
 /*----------------------------------------------------------*/
-
-//Keyboyard task
+//Keyboard task
 static void keyb_mainmenu(appState *app)
 {
 	uint8_t key = keyb_get();
@@ -413,21 +476,35 @@ static void keyb_mainmenu(appState *app)
 		app->menu++;
 		//Zero scrol varible
 		app->scrollPos = 0;
+		//If max reached start again
+		if(app->menu==mnuSET_ALARM) app->menu=mnuRADIATION;
 	}
-	//If max reached start again
-	if(app->menu==mnuSET_ALARM) app->menu=mnuRADIATION;
-	//Delete radiation
-	if(key==(KEY_ENTER|KEYB_RPT))
+	else if(key==KEY_ENTER)
 	{
-		if(app->menu==mnuDISP_DOSE) app->dose = 0;
-		if(app->menu==mnuMAX_RADIATION) app->radiationMax = 0;
+		//Disp delDose
+		if(app->menu==mnuDISP_DOSE)
+		{
+			app->menu=mnuDISP_DELDOSE;
+			keyb_task = keyb_yesno;
+		}
+		//Disp delMax
+		else if(app->menu==mnuMAX_RADIATION)
+		{
+			app->menu=mnuDISP_DELMAXRAD;
+			keyb_task = keyb_yesno;
+		}
+		//Disp enter conf
+		else if(app->menu==mnuDISP_CONF)
+		{
+			//Goto setup menu and it kbd handler
+			app->menu = mnuSET_ALARM;
+			keyb_task = keyb_configmenu;
+		}
 	}
-	//If display conf change keyboyard handler
-	if(key==KEY_ENTER && app->menu==mnuDISP_CONF)
+	//Escape key return to radiation
+	else if(key==KEY_ESC)
 	{
-		//Goto setup menu and it kbd handler
-		app->menu = mnuSET_ALARM;
-		keyb_task = keyb_configmenu;
+		app->menu = mnuRADIATION;
 	}
 }
 

@@ -30,6 +30,8 @@ enum mnuItems
     mnuSET_ALGO,		//Display algo config
     mnuSET_DATE,		//Display and config date
     mnuENTER_DATE,		//Enter new date
+    mnuDISP_DELDOSE,	//Display delete dose
+    mnuDISP_DELMAXRAD	//Delete maximum
 };
 
 

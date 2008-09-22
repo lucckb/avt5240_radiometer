@@ -18,6 +18,7 @@
 #define BATTERY_TIMER 2
 #define MAXRAD_TIMER 3
 
+
 /*----------------------------------------------------------*/
 //System timer set value
 void timer_set(int id,int tick);

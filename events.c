@@ -100,7 +100,7 @@ static void on_keyb_timer_event(void)
 		static uint8_t key = 0;
 		uint8_t PortKey;
 
-		if(++RepeatK == 5)
+		if(++RepeatK == 6)
 		{
 			RepeatK = 0;
 			PortKey = (~KEYPORT->IDR >> 5)&0x07;
