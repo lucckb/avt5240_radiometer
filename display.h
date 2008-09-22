@@ -28,6 +28,8 @@ enum mnuItems
     mnuSET_ALARM,		//Set radiation alarm
     mnuSET_UNIT,		//Display unit config
     mnuSET_ALGO,		//Display algo config
+    mnuSET_DATE,		//Display and config date
+    mnuENTER_DATE,		//Enter new date
 };
 
 
@@ -58,10 +60,17 @@ typedef struct appState
 	time_t radiationMaxTime;
 	//Power voltage in ten mV
 	int Vpwr;
-	//Define cursor position in scrolling
-	uint8_t scrollPos;
+	//Parameter passed beetwen key and apps
+	union
+	{
+		uint8_t scrollPos;
+		uint8_t cursorPos;
+	};
+	//Define alarm values
+	int alarmLevel;
 
 } appState;
+
 
 /*----------------------------------------------------------*/
 

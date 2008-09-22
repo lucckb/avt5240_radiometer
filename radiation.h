@@ -11,18 +11,18 @@
 /*----------------------------------------------------------*/
 
 //Current radiation mode
-enum radiationMode  { 
-						radiationCURRENT,	//Current radiation mode 
+enum radiationMode  {
+						radiationCURRENT,	//Current radiation mode
 						radiationLAST 		//Last valid radiation
 					};
 
 /*----------------------------------------------------------*/
 //Setup radiation mode
 enum radiationCountMode {
-							radiationCountSTD=0,			//Standard algoritm
-							radiationCountSHORT=40,		//Short sample buffer
-							radiationCountMEDIUM=100,   //Medium sample buffer
-							radiationCountHIGH=400		//Long sample buffer
+							radiationCountSTD,			//Standard algoritm
+							radiationCountSHORT,		//Short sample buffer
+							radiationCountMEDIUM,   //Medium sample buffer
+							radiationCountHIGH		//Long sample buffer
 						};
 
 

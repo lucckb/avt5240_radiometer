@@ -69,6 +69,10 @@ void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority)
 #endif
 
 /*----------------------------------------------------------*/
+//Nop
+#define nop() asm volatile("nop")
+
+/*----------------------------------------------------------*/
 /* Configure watchdog with selected
  * @param prescaler - prescaler value
  * @param reload - reload value */

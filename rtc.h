@@ -17,9 +17,7 @@ struct rtc_tm
     int     tm_year;        /* rok */
     int     tm_wday;        /* dzień tygodnia */
     int     tm_yday;        /* dzień roku */
-    int     tm_isdst;       /* sezonowa zmiana czasu */
 };
-
 
 /*----------------------------------------------------------*/
 
@@ -65,7 +63,7 @@ time_t rtc_mktime(struct rtc_tm *tmbuf);
 /*----------------------------------------------------------*/
 
 //Get gmt time
-struct rtc_tm *rtc_gmtime(time_t time, struct rtc_tm *tmbuf);
+struct rtc_tm *rtc_time(time_t time, struct rtc_tm *tmbuf);
 
 /*----------------------------------------------------------*/
 

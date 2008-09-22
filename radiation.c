@@ -128,7 +128,21 @@ void setup_radiation(enum radiationCountMode mode)
 	nvic_irq_enable(TIM2_IRQChannel,false);
 
 	//Setup sample alghoritm
-	samplesLength = mode;
+	switch(mode)
+	{
+		case radiationCountSTD:
+			samplesLength = 0;
+			break;
+		case radiationCountSHORT:
+			samplesLength = 40;
+			break;
+		case radiationCountMEDIUM:
+			samplesLength = 100;
+			break;
+		case radiationCountHIGH:
+			samplesLength = 400;
+			break;
+	}
 
 	//Setup higest priority for this int
 	nvic_irq_priority(TIM2_IRQChannel,0,0);

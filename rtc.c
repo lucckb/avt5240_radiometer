@@ -49,7 +49,7 @@ int rtc_setup(void)
 	PWR_CR |= PWR_CR_DBP;
 	//Disable LSE oscilator
 	RCC->BDCR &= ~BDCR_LSEON;
-	asm volatile("nop");
+	nop();
 	//Enable LSE oscilator
 	RCC->BDCR |= BDCR_LSEON;
 	//Wait for lserdy flag
@@ -86,7 +86,9 @@ int rtc_setup(void)
 //Get rtc clock
 time_t rtc_get(void)
 {
-	return RTC->CNTL | ((uint32_t)RTC->CNTH)<<16;
+	uint16_t tmp = RTC->CNTL;
+
+	return (((uint32_t)RTC->CNTH)<<16)|tmp;
 }
 
 /*----------------------------------------------------------*/
@@ -97,11 +99,14 @@ void rtc_set(time_t time)
 	rtc_wait_for_last_write();
 	/* Enable configuration */
 	RTC->CRL |= CRL_CNF_Set;
+	rtc_wait_for_last_write();
 	//Set counter
-	RTC->CNTH = time >> 16;
-	RTC->CNTL = time;
+	RTC->CNTH = (uint32_t)time >> 16;
+	RTC->CNTL = (uint32_t)time;
+	rtc_wait_for_last_write();
 	/* Disable configuration */
 	RTC->CRL &= CRL_CNF_Reset;
+	rtc_wait_for_last_write();
 }
 
 /*----------------------------------------------------------*/
@@ -136,9 +141,6 @@ uint16_t rtc_bkp_read(uint8_t addr)
 
 #define TIME_MAX                2147483647L
 
-int _daylight = 0;                  // Non-zero if daylight savings time is used
-long _dstbias = 0;                  // Offset for Daylight Saving Time
-long _timezone = 0;                 // Difference in seconds between GMT and local time
 
 /*----------------------------------------------------------*/
 
@@ -150,7 +152,7 @@ static const int _ytab[2][12] =
 
 /*----------------------------------------------------------*/
 
-struct rtc_tm *rtc_gmtime(time_t time, struct rtc_tm *tmbuf)
+struct rtc_tm *rtc_time(time_t time, struct rtc_tm *tmbuf)
 {
   unsigned long dayclock, dayno;
   int year = EPOCH_YR;
@@ -176,7 +178,6 @@ struct rtc_tm *rtc_gmtime(time_t time, struct rtc_tm *tmbuf)
     tmbuf->tm_mon++;
   }
   tmbuf->tm_mday = dayno + 1;
-  tmbuf->tm_isdst = 0;
 
   return tmbuf;
 }
@@ -187,7 +188,7 @@ struct rtc_tm *rtc_localtime(time_t timer, struct rtc_tm *tmbuf)
   time_t t;
 
   t = timer - _timezone;
-  return rtc_gmtime(t, tmbuf);
+  return rtc_time(t, tmbuf);
 }
 
 /*----------------------------------------------------------*/
@@ -198,7 +199,6 @@ time_t rtc_mktime(struct rtc_tm *tmbuf)
   int yday, month;
   /*unsigned*/ long seconds;
   int overflow;
-  long dst;
 
   tmbuf->tm_min += tmbuf->tm_sec / 60;
   tmbuf->tm_sec %= 60;
@@ -285,20 +285,6 @@ time_t rtc_mktime(struct rtc_tm *tmbuf)
 
   if ((TIME_MAX - seconds) / SECS_DAY < day) overflow++;
   seconds += day * SECS_DAY;
-
-  // Now adjust according to timezone and daylight saving time
-  if (((_timezone > 0) && (TIME_MAX - _timezone < seconds))
-      || ((_timezone < 0) && (seconds < -_timezone)))
-          overflow++;
-  seconds += _timezone;
-
-  if (tmbuf->tm_isdst)
-    dst = _dstbias;
-  else
-    dst = 0;
-
-  if (dst > seconds) overflow++;        // dst is always non-negative
-  seconds -= dst;
 
   if (overflow) return (time_t) -1;
 

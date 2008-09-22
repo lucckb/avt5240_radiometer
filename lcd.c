@@ -237,6 +237,14 @@ void lcd_clear(void)
 }
 
 /*----------------------------------------------------------*/
+//Wrzuca spacje
+void lcd_putspace(uint8_t n)
+{
+	for(int i=0;i<n;i++)
+		lcd_putch(' ');
+}
+
+/*----------------------------------------------------------*/
 //Wyswietl znak
 void lcd_putch(char ch)
 {

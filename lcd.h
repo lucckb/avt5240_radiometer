@@ -25,11 +25,8 @@
 
 /*----------------------------------------------------*/
 
+//Initialize LCD
 void lcd_init(void);
-
-/*----------------------------------------------------*/
-
-void lcd_puts(char *nap);
 
 /*----------------------------------------------------*/
 
@@ -46,9 +43,19 @@ void lcd_clear(void);
 //Cursor to home position
 #define LCD_CURSOR_HOME 0x02
 
+//Show cursor
+#define LCD_CURSOR_SHOW 0x0F
+
+//Cursor hide
+#define LCD_CURSOR_HIDE 0x0C
+
 /*----------------------------------------------------*/
 //Wyswietl znak
 void lcd_putch(char ch);
+
+/*----------------------------------------------------*/
+//LCD put space
+void lcd_putspace(uint8_t n);
 
 /*----------------------------------------------------*/
 //Send command

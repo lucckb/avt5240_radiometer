@@ -33,18 +33,15 @@ void systick_setup(int reload);
 
 /*----------------------------------------------------------*/
 
-
 //Klawisz powtorzony
 #define KEYB_RPT 0x80
 
 //Next key
-#define KEY_NEXT  1
+#define KEY_NEXT  2
 //Enter key
-#define KEY_ENTER 2
+#define KEY_ENTER 1
 //Escape key
 #define KEY_ESC 4
-
-
 
 /*----------------------------------------------------------*/
 
