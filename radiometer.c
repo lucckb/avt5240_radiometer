@@ -33,14 +33,19 @@ static void perhiph_init(void)
 	  nvic_system_priority(SystemHandler_SysTick,1,0);
 	  //Setup system timer to 0,01 s
 	  systick_setup(10000);
-	  //Enable rtc
-	  rtc_setup();
 	  //Enable AC converter
 	  adc_setup();
 	  //Initialize kbd
 	  keyb_setup();
 	  //Initialize watchdog
 	  iwdt_setup(IWDG_Prescaler_16,0xFFF);
+
+	  //Check for valid configuration
+	  if(isvalid_config()==false)
+	  {
+		 //Enable rtc
+		 rtc_setup();
+	  }
 }
 
 
@@ -156,6 +161,7 @@ static appState app =
 		Vpwr: -1,
 };
 
+
 /*----------------------------------------------------------*/
 void main(void) __attribute__ ((noreturn));
 
@@ -168,9 +174,12 @@ void main(void)
   //Introduction menu
   introduction();
 
+  /* Tmp
   setup_radiation(radiationCountMEDIUM);
   app.radiationAlgo = radiationCountMEDIUM;
   //app.unit = unitSI;
+   */
+
 
   //Setup dose timer
   timer_set(DOSE_TIMER,DOSE_REFRESH);

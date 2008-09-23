@@ -130,7 +130,6 @@ static void gpio_init(void)
 //czeka n mikrosekund
 static void delay_us(int us)
 {
-    us *= 2;
     while(us--)
 	asm volatile ("nop");
 }
