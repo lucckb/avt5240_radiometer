@@ -193,7 +193,9 @@ void radiation_reconfigure(enum radiationCountMode mode)
 	else
 	{
 		//Erase memory with samples
-		memset((void*)samples,0,sizeof(samples));
+		for(int i=0;i<sizeof(samples);i++) samples[i] = 0;
+		//Reset sample WR position
+		samplesWrPos = 0;
 		//Prescaler for 5us pulse
 		TIM2->PSC = 39;
 		//Disable external counting mode
