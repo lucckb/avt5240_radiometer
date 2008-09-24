@@ -37,6 +37,8 @@ static volatile unsigned int samples[SAMPLEBUF_LENGTH+1];
 //Current sample position counter
 static volatile unsigned short samplesWrPos;
 
+//Timer for standard algoritm
+volatile short Tim40s = HZ*40;
 
 /*----------------------------------------------------------*/
 //Calculate current radiation
@@ -184,6 +186,8 @@ void radiation_reconfigure(enum radiationCountMode mode)
 		TIM2->SMCR = SMCR_ETP | SMCR_ECE | (CCMR1_CH1_FILTER_F1_N4<<8);
 		//Enable IRQ Overflow
 		TIM2->DIER |= DIER_UIE;
+		//Setup 40s counting timer
+		Tim40s = HZ*40;
 	}
 	//Extended counting mode based on sample time
 	else
@@ -252,7 +256,7 @@ void timer2_handler(void)
 }
 
 /*----------------------------------------------------------*/
-volatile short Tim40s = HZ*40;
+
 
 //This function should be called after 40s from interrupt handler
 void on_radiation_timeout_event(void)
