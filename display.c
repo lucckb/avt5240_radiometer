@@ -11,6 +11,7 @@
 #include "display.h"
 #include "radiation.h"
 #include "events.h"
+#include "config.h"
 
 /*----------------------------------------------------------*/
 //Global time tm structure
@@ -34,7 +35,7 @@ static void display_radiation(appState *app)
 	lcd_command(LCD_CURSOR_HOME);
 
 	//Get radiation
-	int rad = get_radiation(radiationCURRENT);
+	int rad = radiation_get(radiationCURRENT);
 
 	if(app->radiationAlgo!= radiationCountSTD)
 	{
@@ -90,7 +91,7 @@ static void display_radiation(appState *app)
 		}
 
 		lcd_setpos(1,2);
-		lcd_printf("%duRh",get_radiation(radiationLAST));
+		lcd_printf("%duRh",radiation_get(radiationCOUNTER));
 		lcd_putspace(4);
 	}
 }
@@ -101,24 +102,36 @@ static void display_max_radiation(appState *app)
 {
 	if(app->scrollPos==0)
 	{
-		//Alghoritm 1/n
-		if(app->unit==unitCLASSIC)
+		if(app->radiationMax>0)
 		{
-			lcd_setpos(1,1);
-			lcd_printf("Max=%uuR/h",app->radiationMax);
-			lcd_putspace(10);
+			//Alghoritm 1/n
+			if(app->unit==unitCLASSIC)
+			{
+				lcd_setpos(1,1);
+				lcd_printf("Max=%uuR/h",app->radiationMax);
+				lcd_putspace(10);
+			}
+			else
+			{
+				lcd_setpos(1,1);
+				lcd_printf("Max=%u.%02uuS/h",app->radiationMax/100,app->radiationMax%100);
+				lcd_putspace(7);
+			}
+			//Get time from rtc clock
+			rtc_time(app->radiationMaxTime,&tm);
+			lcd_setpos(1,2);
+			lcd_printf("%02u:%02u:%02u ",tm.tm_hour,tm.tm_min,tm.tm_sec);
+			lcd_printf("%02u-%02u-%04u",tm.tm_mday,tm.tm_mon,tm.tm_year+1900);
 		}
 		else
 		{
+			//If no radiation put default chars
 			lcd_setpos(1,1);
-			lcd_printf("Max=%u.%02uuS/h",app->radiationMax/100,app->radiationMax%100);
-			lcd_putspace(7);
+			lcd_printf("********");
+			lcd_putspace(8);
+			lcd_setpos(1,2);
+			lcd_printf("**:**:** **-**-****");
 		}
-		//Get time from rtc clock
-		rtc_time(app->radiationMaxTime,&tm);
-		lcd_setpos(1,2);
-		lcd_printf("%02u:%02u:%02u ",tm.tm_hour,tm.tm_min,tm.tm_sec);
-		lcd_printf("%02u-%02u-%04u",tm.tm_mday,tm.tm_mon,tm.tm_year+1900);
 	}
 	else if(app->scrollPos<29 && app->scrollPos>6  && (app->scrollPos&1))
 	{
@@ -390,7 +403,10 @@ static void keyb_yesno(appState *app)
 			//Skasuj maximum i do menu glownego
 			app->radiationMax = 0;
 			app->menu = mnuMAX_RADIATION;
+			app->radiationMaxTime = DEFAULT_TIME_T;
 			app->scrollPos = 0;
+			//Write maximum data value
+			maximum_write_config(app);
 		}
 		keyb_task = keyb_mainmenu;
 	}
@@ -439,6 +455,8 @@ static void keyb_configmenu(appState *app)
 			//Change unit set
 			if(app->unit==unitCLASSIC) app->unit=unitSI;
 			else app->unit=unitCLASSIC;
+			//Save settings
+			settings_write_config(app);
 		}
 		//Change algoritm
 		else if(app->menu==mnuSET_ALGO)
@@ -446,6 +464,10 @@ static void keyb_configmenu(appState *app)
 			app->radiationAlgo++;
 			if(app->radiationAlgo>radiationCountHIGH)
 				app->radiationAlgo = radiationCountSTD;
+			//Change radiation type
+			radiation_reconfigure(app->radiationAlgo);
+			//Save radiation config
+			settings_write_config(app);
 		}
 		//Goto enter date
 		else if(app->menu==mnuSET_DATE)

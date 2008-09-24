@@ -13,7 +13,7 @@
 //Current radiation mode
 enum radiationMode  {
 						radiationCURRENT,	//Current radiation mode
-						radiationLAST 		//Last valid radiation
+						radiationCOUNTER 	//Get radiation counter
 					};
 
 /*----------------------------------------------------------*/
@@ -27,15 +27,19 @@ enum radiationCountMode {
 
 
 /*----------------------------------------------------------*/
+//Initialize radiation at first time
+void radiation_setup(void);
+
+/*----------------------------------------------------------*/
 
 //Get radiation calculated in uR/h
-int get_radiation(enum radiationMode mode);
+int radiation_get(enum radiationMode mode);
 
 
 /*----------------------------------------------------------*/
 
 //Setup counter with standard russian counting alg.
-void setup_radiation(enum radiationCountMode mode);
+void radiation_reconfigure(enum radiationCountMode mode);
 
 /*----------------------------------------------------------*/
 

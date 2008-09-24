@@ -45,6 +45,12 @@ void nvic_irq_enable(uint8_t channel, bool enable);
 void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority);
 
 /*----------------------------------------------------------*/
+/* Clear pending bit IRQ interrupt
+ * channel - IRQ channel number
+ */
+void nvic_irq_pend_clear(uint8_t channel);
+
+/*----------------------------------------------------------*/
 //Memory access in bit band region
 
 //Get address value from pointer

@@ -31,6 +31,11 @@ time_t rtc_get(void);
 
 /*----------------------------------------------------------*/
 
+//Initialize backup domain only
+void bkp_init(void);
+
+/*----------------------------------------------------------*/
+
 //Set rtc clock
 void rtc_set(time_t time);
 

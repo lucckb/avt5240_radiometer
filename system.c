@@ -1,4 +1,4 @@
-/* Microcontroller porting layer 
+/* Microcontroller porting layer
  * Lucjan Bryndza (c) 2008
  */
 
@@ -45,15 +45,15 @@ void system_setup(void)
         if(RCC->CR & RCC_CR_HSERDY) break;
     }
     //Configure flash: Prefetch enable and 0 wait state
-    FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_0; 
+    FLASH->ACR = FLASH_ACR_PRFTBE | FLASH_ACR_LATENCY_0;
     //Configure system clocks ALL clocks freq 8MHz ADC to 1MHz
     RCC->CFGR = RCC_CFGR_SW_HSE | RCC_CFGR_MCO_SYSCLK | RCC_CFGR_ADCPRE_8;
     // At end disable HSI oscilator for power reduction
     RCC->CR &= ~RCC_CR_HSI_ON;
     //Setup NVIC vector at begin of flash
     SCB->VTOR = NVIC_VectTab_FLASH;
-    
-}	
+
+}
 
 
 
@@ -62,7 +62,7 @@ void system_setup(void)
 //Setup priority group in NVIC controler
 #define AIRCR_VECTKEY_MASK    ((u32)0x05FA0000)
 
-//Setup NVIC priority group 
+//Setup NVIC priority group
 void nvic_priority_group(uint32_t group)
 {
 	/* Set the PRIGROUP[10:8] bits according to NVIC_PriorityGroup value */
@@ -76,22 +76,22 @@ void nvic_priority_group(uint32_t group)
  * subpriority - assign supbriority */
 void nvic_irq_priority(uint8_t channel,uint8_t priority,uint8_t subpriority)
 {
-	/* Compute the Corresponding IRQ Priority */    
+	/* Compute the Corresponding IRQ Priority */
 	uint32_t tmppriority = (0x700 - (SCB->AIRCR & (u32)0x700))>> 0x08;
 	uint32_t tmppre = (0x4 - tmppriority);
 	uint32_t tmpsub = 0x0F;
 	tmpsub = tmpsub >> tmppriority;
-	
+
 	tmppriority = (uint32_t)priority << tmppre;
 	tmppriority |=  subpriority & tmpsub;
 
 	tmppriority = tmppriority << 0x04;
 	tmppriority = ((u32)tmppriority) << ((channel & (u8)0x03) * 0x08);
-	    
+
 	uint32_t tmpreg = NVIC->IPR[(channel >> 0x02)];
 	uint32_t tmpmask = (u32)0xFF << ((channel & (u8)0x03) * 0x08);
 	tmpreg &= ~tmpmask;
-	tmppriority &= tmpmask;  
+	tmppriority &= tmpmask;
 	tmpreg |= tmppriority;
 	NVIC->IPR[(channel >> 0x02)] = tmpreg;
 }
@@ -114,6 +114,16 @@ void nvic_irq_enable(uint8_t channel, bool enable)
 }
 
 /*----------------------------------------------------------*/
+/* Clear pending bit IRQ interrupt
+ * channel - IRQ channel number
+ */
+void nvic_irq_pend_clear(uint8_t channel)
+{
+	//Clear pending bit
+	NVIC->ICPR[(channel >> 0x05)] = (u32)0x01 << (channel & (u32)0x1F);
+}
+
+/*----------------------------------------------------------*/
 /* Setup NVIC system handler priority
  * handler - setup selected channel
  * priority - assign IRQ preemtion priority
@@ -130,11 +140,11 @@ void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority)
 
 	tmppriority = tmppriority << 0x04;
 	tmp1 = handler & (u32)0xC0;
-	tmp1 = tmp1 >> 0x06; 
+	tmp1 = tmp1 >> 0x06;
 	tmp2 = (handler >> 0x08) & (u32)0x03;
 	tmppriority = tmppriority << (tmp2 * 0x08);
 	uint32_t handlermask = (u32)0xFF << (tmp2 * 0x08);
-	  
+
 	SCB->SHPR[tmp1] &= ~handlermask;
 	SCB->SHPR[tmp1] |= tmppriority;
 }
@@ -145,7 +155,7 @@ void nvic_system_priority(uint32_t handler,uint8_t priority,uint8_t subpriority)
 #define KR_KEY_Enable    ((u16)0xCCCC)
 
 
-/* Configure watchdog with selected 
+/* Configure watchdog with selected
  * @param prescaler - prescaler value
  * @param reload - reload value */
 
@@ -153,7 +163,7 @@ void iwdt_setup(uint8_t prescaler,uint16_t reload)
 {
 	//Enable write access to wdt
 	IWDG->KR = IWDG_WriteAccess_Enable;
-	//Program prescaler 
+	//Program prescaler
 	IWDG->PR = prescaler;
 	//Set reload value
 	IWDG->RLR = reload;

@@ -10,6 +10,7 @@
 #include "system.h"
 #include "events.h"
 #include "buzer.h"
+#include <string.h>
 /*----------------------------------------------------------*/
 
 //Sample buf margin for computation
@@ -70,7 +71,7 @@ static int calcstd_radiation(void)
 
 /*----------------------------------------------------------*/
 //Get radiation calculated in uR/h
-int get_radiation(enum radiationMode mode)
+int radiation_get(enum radiationMode mode)
 {
 	switch (mode)
 	{
@@ -78,8 +79,7 @@ int get_radiation(enum radiationMode mode)
 	case radiationCURRENT:
 		if(samplesLength==0)
 		{
-			//Get uR/h in russian alghoritm
-			return ((uint32_t)timerHi << 16) | TIM2->CNT;
+			return radiationLast;
 		}
 		else
 		{
@@ -87,8 +87,9 @@ int get_radiation(enum radiationMode mode)
 			return calcstd_radiation();
 		}
 	//Get last valid exp dose in standard algorithm
-	case radiationLAST:
-		return radiationLast;
+	case radiationCOUNTER:
+		//Get uR/h in russian alghoritm
+		return ((uint32_t)timerHi << 16) | TIM2->CNT;
 	}
 	return -1;
 }
@@ -120,12 +121,38 @@ int get_radiation(enum radiationMode mode)
 #define LED_OFF() GPIOA->BSRR = (1<<2)
 
 /*----------------------------------------------------------*/
-//Setup counter with standard russian counting alg.
-void setup_radiation(enum radiationCountMode mode)
+//Initialize radiation at first time
+void radiation_setup(void)
 {
-
 	//Disable  nvic channel interrupt
 	nvic_irq_enable(TIM2_IRQChannel,false);
+	//Setup higest priority for this int
+	nvic_irq_priority(TIM2_IRQChannel,0,0);
+
+	//Enable APB perhiperal
+	RCC->APB2ENR |= RCC_APB2Periph_GPIOA;
+	RCC->APB1ENR |= RCC_APB1Periph_TIM2;
+	//Setup GPIOA.0 as input
+	GPIOA->CRL &= GPIO_BIT0_CRL_MASK;
+	GPIOA->CRL |= GPIO_INPUT_FLOAT << 2;
+
+	//Gpio LED configuration
+	GPIOA->CRL &= GPIO_LED_Mask;
+	GPIOA->CRL |= GPIO_MODE_10MHZ<<8;
+	LED_OFF();
+}
+
+/*----------------------------------------------------------*/
+//Reconfigure radiation settings counter with standard russian counting alg.
+void radiation_reconfigure(enum radiationCountMode mode)
+{
+	//Disable  nvic channel interrupt
+	nvic_irq_enable(TIM2_IRQChannel,false);
+
+	//Timer 2 reset signal
+	RCC->APB1RSTR |= RCC_APB1Periph_TIM2;
+	nop();
+	RCC->APB1RSTR &= ~RCC_APB1Periph_TIM2;
 
 	//Setup sample alghoritm
 	switch(mode)
@@ -144,35 +171,14 @@ void setup_radiation(enum radiationCountMode mode)
 			break;
 	}
 
-	//Setup higest priority for this int
-	nvic_irq_priority(TIM2_IRQChannel,0,0);
-
-	//Enable APB perhiperal
-	RCC->APB2ENR |= RCC_APB2Periph_GPIOA;
-	RCC->APB1ENR |= RCC_APB1Periph_TIM2;
-	//Setup GPIOA.0 as input
-	GPIOA->CRL &= GPIO_BIT0_CRL_MASK;
-	GPIOA->CRL |= GPIO_INPUT_FLOAT << 2;
-
-
-	//Gpio LED configuration
-	 GPIOA->CRL &= GPIO_LED_Mask;
-	 GPIOA->CRL |= GPIO_MODE_10MHZ<<8;
-	 LED_OFF();
-
-	//Disable and reset timer
-	TIM2->CR1 = CR1_URS;
-	//Disable interrupt
-	TIM2->DIER = 0;
 
 	//Reset current timer value
 	timerHi = 0;
+	TIM2->CNT = 0;
 
 	//Standard counting based on russian devices
 	if(mode==radiationCountSTD)
 	{
-		//Disable capture channel
-		TIM2->CCER &= ~CCER_CC1E;
 		TIM2->PSC = 0;
 		//Configure timer for counting external events
 		TIM2->SMCR = SMCR_ETP | SMCR_ECE | (CCMR1_CH1_FILTER_F1_N4<<8);
@@ -182,6 +188,8 @@ void setup_radiation(enum radiationCountMode mode)
 	//Extended counting mode based on sample time
 	else
 	{
+		//Erase memory with samples
+		memset((void*)samples,0,sizeof(samples));
 		//Prescaler for 5us pulse
 		TIM2->PSC = 39;
 		//Disable external counting mode
@@ -202,6 +210,9 @@ void setup_radiation(enum radiationCountMode mode)
 		//Enable IRQ Overflow
 		TIM2->DIER |= DIER_UIE;
 	}
+
+	//Clear pending bit from IRQ
+	nvic_irq_pend_clear(TIM2_IRQChannel);
 	//Enable nvic channel
 	nvic_irq_enable(TIM2_IRQChannel,true);
 	//Enable timer2

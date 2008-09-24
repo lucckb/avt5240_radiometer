@@ -21,8 +21,9 @@
 #define CFG_CONFIG_ADDR 9
 
 //Radiation backup addr
-#define CFG_RADVAL_ADDR 0
-#define CFG_RADTIME_ADDR 2
+#define CFG_RADVAL_ADDR 1
+#define CFG_RADTIME_ADDR 3
+
 
 /*----------------------------------------------------------*/
 
@@ -41,7 +42,7 @@ void read_config(appState *app)
 	if(isvalid_config()==false)
 	{
 		//Save on lower byte config algo and on hi byte radiation algo
-		rtc_bkp_write(CFG_CONFIG_ADDR,unitSI<<8|radiationCountMEDIUM);
+		rtc_bkp_write(CFG_CONFIG_ADDR,(uint16_t)unitSI<<8|radiationCountMEDIUM);
 		//Zero dose
 		rtc_bkp_write(CFG_RADTIME_ADDR,0);
 		rtc_bkp_write(CFG_RADTIME_ADDR+1,0);
@@ -50,6 +51,7 @@ void read_config(appState *app)
 		//Write magic key
 		rtc_bkp_write(CFG_MAGIC_ADDR,CFG_MAGIC_KEY);
 	}
+
 	uint16_t val;
 
 	//Read config
@@ -70,13 +72,27 @@ void read_config(appState *app)
 
 }
 /*----------------------------------------------------------*/
-
-//Save configuration
-void save_settings(appState *app)
+//Save configuration unit and radiationa algoritm
+void settings_write_config(appState *app)
 {
 	//Save on lower byte config algo and on hi byte radiation algo
-	rtc_bkp_write(CFG_CONFIG_ADDR,app->unit<<8|app->radiationAlgo);
+	rtc_bkp_write(CFG_CONFIG_ADDR,(uint16_t)app->unit<<8 | app->radiationAlgo);
 }
 
 /*----------------------------------------------------------*/
+//Save maximum values
+void maximum_write_config(appState *app)
+{
+	//Read max radiation value
+	uint16_t *valp;
+	valp = (uint16_t*)&app->radiationMax;
+	rtc_bkp_write(CFG_RADVAL_ADDR,*valp);
+	rtc_bkp_write(CFG_RADVAL_ADDR+1,*(valp+1));
 
+	//Read max radiation time
+	valp = (uint16_t*)&app->radiationMaxTime;
+    rtc_bkp_write(CFG_RADTIME_ADDR,*valp);
+    rtc_bkp_write(CFG_RADTIME_ADDR+1,*(valp+1));
+}
+
+/*----------------------------------------------------------*/

@@ -7,6 +7,8 @@
 
 //PWR control register
 #define PWR_CR (*(volatile uint32_t*)0x40007000)
+
+
 //Enable access to backup domain and RTC
 #define PWR_CR_DBP (1<<8)
 //Enable LSE oscilator
@@ -80,6 +82,16 @@ int rtc_setup(void)
 
 
 	return EXIT_SUCCESS;
+}
+
+/*----------------------------------------------------------*/
+//Initialize backup domain only
+void bkp_init(void)
+{
+	//Enable clock for power and backup domains
+	RCC->APB1ENR |= RCC_APB1Periph_PWR | RCC_APB1Periph_BKP;
+	//Enable acces to RTC and backup regs
+	PWR_CR |= PWR_CR_DBP;
 }
 
 /*----------------------------------------------------------*/

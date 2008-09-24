@@ -7,6 +7,7 @@
 #include "events.h"
 #include "buzer.h"
 #include "display.h"
+#include "config.h"
 
 /*----------------------------------------------------------*/
 //Calculate dose refresh
@@ -45,7 +46,16 @@ static void perhiph_init(void)
 	  {
 		 //Enable rtc
 		 rtc_setup();
+		 //Write default time to rtc
+		 rtc_set(DEFAULT_TIME_T);
 	  }
+	  else
+	  {
+		  //Init backup domain only
+		  bkp_init();
+	  }
+	  //Initialize TIM2 for radiation
+	  radiation_setup();
 }
 
 
@@ -133,7 +143,7 @@ static void calc_radiation_task(appState *app)
 	 if(timer_get(DOSE_TIMER)==0)
 	 {
 		 timer_set(DOSE_TIMER,DOSE_REFRESH);
-		 app->dose += get_radiation(radiationCURRENT);
+		 app->dose += radiation_get(radiationCURRENT);
 	 }
 	 //Max radiation every 5 seconds
 	 if(timer_get(MAXRAD_TIMER)==0)
@@ -142,7 +152,7 @@ static void calc_radiation_task(appState *app)
 		//Timer radiation refresh
 		timer_set(MAXRAD_TIMER,MAXRADIATION_REFRESH);
 		//Get radiation
-		int rad = get_radiation(radiationCURRENT);
+		int rad = radiation_get(radiationCURRENT);
 		//Check for max value
 		if(rad>app->radiationMax)
 		{
@@ -174,12 +184,11 @@ void main(void)
   //Introduction menu
   introduction();
 
-  /* Tmp
-  setup_radiation(radiationCountMEDIUM);
-  app.radiationAlgo = radiationCountMEDIUM;
-  //app.unit = unitSI;
-   */
+  //Read configuration from memory
+  read_config(&app);
 
+  //Setup radiation alghoritm
+  radiation_reconfigure(app.radiationAlgo);
 
   //Setup dose timer
   timer_set(DOSE_TIMER,DOSE_REFRESH);
