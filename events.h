@@ -45,7 +45,6 @@ static inline void timer_wait(timer_t wait_time)
 	while(jiffies-t0<wait_time)
 	{
 		iwdt_reset();
-		wfi();
 	}
 }
 
