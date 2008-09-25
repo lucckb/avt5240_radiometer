@@ -43,6 +43,14 @@ enum unitConfig
 	unitSI				//SI Unit (Sivert per hour)
 };
 
+/*----------------------------------------------------------*/
+//Current alarm status
+enum alarmStatus
+{
+	alarmNONE,			//No alarm event occurred
+	alarmON,			//Allarm is now enabled
+	alarmFINISHED		//Alarm finished waiting for reset
+};
 
 /*----------------------------------------------------------*/
 //Global application structure
@@ -70,6 +78,8 @@ typedef struct appState
 	};
 	//Define alarm values
 	int alarmLevel;
+	//Alarm status
+	enum alarmStatus alarmStat;
 
 } appState;
 

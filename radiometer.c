@@ -44,8 +44,13 @@ static void perhiph_init(void)
 	  //Check for valid configuration
 	  if(isvalid_config()==false)
 	  {
-		 //Enable rtc
-		 rtc_setup();
+		 if(rtc_setup()<0)
+		 {
+			 lcd_setpos(1,1);
+			 lcd_printf("LSE osc ");
+			 lcd_printf("FAILED  ");
+			 while(1);
+		 }
 		 //Write default time to rtc
 		 rtc_set(DEFAULT_TIME_T);
 	  }
@@ -67,19 +72,11 @@ static void introduction(void)
 	//Write initial message
 	lcd_printf("BoFF-R10");
 	lcd_setpos(1,2);
-	lcd_printf("ver0.11");
+	lcd_printf("ver0.30");
 	//Enable buzzer
 	buzer_alarm(true);
-	//Wait a while
-	timer_set(DISPLAY_TIMER,HZ);
-
-	//Wait for timer
-	while(timer_get(DISPLAY_TIMER))
-	{
-		iwdt_reset();
-		wfi();
-	}
-
+	//Wait 1s
+	timer_wait(HZ);
 	//Enable buzer alarm
 	buzer_alarm(false);
 
@@ -97,8 +94,10 @@ static void battery_check_task(appState *app)
 {
 	static uint8_t cnt = 0;
 	static uint32_t sum = 0;
-    //Start conv and calculate conv 10 times
+    static timer_t adc_timer = 0;
+    static timer_t bat_timer= 0;
 
+	//Start conv and calculate conv 10 times
 	//Total 10 measure
 	if(cnt < 20)
 	{
@@ -106,13 +105,13 @@ static void battery_check_task(appState *app)
 		{
 			//On odd bits start conv
 			adc_startconv();
-			timer_set(BATTERY_TIMER,2);
+			timer_start(adc_timer);
 			cnt++;
 		}
 		else
 		{
 			//Od even get adc value
-			if(timer_get(BATTERY_TIMER)==0)
+			if(timer_elapsed(adc_timer,2))
 			{
 				sum += adc_getval();
 				cnt++;
@@ -123,34 +122,37 @@ static void battery_check_task(appState *app)
 	{
 		//If 10 get adc val wait 30s
 		app->Vpwr = (((sum/10)*ADC_VMAX)/ADC_MAXVAL)/10;
-		timer_set(BATTERY_TIMER,HZ*30);
+		timer_start(bat_timer);
 		cnt++;
 		sum = 0;
 	}
 	else
 	{
 		//On timeout start alghoritm again
-		if(timer_get(BATTERY_TIMER)==0) cnt = 0;
+		if(timer_elapsed(bat_timer,30*HZ)) cnt = 0;
 	}
 }
-
 
 /*----------------------------------------------------------*/
 //Keyboyard task
 static void calc_radiation_task(appState *app)
 {
+	 //Dose timer
+	 static timer_t dose_timer;
+     //Maxrad timer
+	 static timer_t maxrad_timer;
+	 //Alarm timer
+	 static timer_t alarm_timer;
 	 //Add dose evry 1min
-	 if(timer_get(DOSE_TIMER)==0)
+	 if(timer_elapsed(dose_timer,DOSE_REFRESH))
 	 {
-		 timer_set(DOSE_TIMER,DOSE_REFRESH);
+		 timer_start(dose_timer);
 		 app->dose += radiation_get(radiationCURRENT);
 	 }
 	 //Max radiation every 5 seconds
-	 if(timer_get(MAXRAD_TIMER)==0)
+	 if(timer_elapsed(maxrad_timer,MAXRADIATION_REFRESH))
 	 {
-
-		//Timer radiation refresh
-		timer_set(MAXRAD_TIMER,MAXRADIATION_REFRESH);
+		timer_start(maxrad_timer);
 		//Get radiation
 		int rad = radiation_get(radiationCURRENT);
 		//Check for max value
@@ -159,6 +161,44 @@ static void calc_radiation_task(appState *app)
 			//Get radiation and get rtc time
 			app->radiationMax = rad;
 			app->radiationMaxTime = rtc_get();
+			maximum_write_config(app);
+		}
+		//Check for alarm
+		if(app->alarmLevel)
+		{
+			switch(app->alarmStat)
+			{
+				//Alarm is on
+				case alarmON:
+					if(timer_elapsed(alarm_timer,HZ*30))
+					{
+						//Disable alarm
+						buzer_alarm(false);
+						//Change state to alarm finished
+						app->alarmStat = alarmFINISHED;
+					}
+					break;
+				//Alarm finished
+				case alarmFINISHED:
+					if(rad < app->alarmLevel-2)
+					{
+						app->alarmStat = alarmNONE;
+					}
+					break;
+				//Alarm is disabled
+				case alarmNONE:
+					if(rad>app->alarmLevel)
+					{
+						//Change state
+						app->alarmStat = alarmON;
+						//Enable alarm
+						buzer_alarm(true);
+						//Start timer
+						timer_start(alarm_timer);
+					}
+					break;
+			}
+
 		}
 	 }
 }
@@ -190,10 +230,8 @@ void main(void)
   //Setup radiation alghoritm
   radiation_reconfigure(app.radiationAlgo);
 
-  //Setup dose timer
-  timer_set(DOSE_TIMER,DOSE_REFRESH);
-  //Setup radiation timer
-  timer_set(MAXRAD_TIMER,MAXRADIATION_REFRESH);
+  //Display refresh timer
+  static timer_t display_timer;
 
   while(1)
   {
@@ -208,10 +246,10 @@ void main(void)
 	  keyb_task(&app);
 
 	  //LCD display task
-	  if(timer_get(DISPLAY_TIMER)==0)
+	  if(timer_elapsed(display_timer,HZ/4))
 	  {
 		  //Screen refresh time
-		  timer_set(DISPLAY_TIMER,HZ/4);
+		  timer_start(display_timer);
 		  disp_funcs[app.menu](&app);
 	  }
 

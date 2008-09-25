@@ -25,12 +25,13 @@ extern int main(void);
 /*----------------------------------------------------------*/
 
 //Handlers declarations
-void sys_tick_handler(void);
-void timer2_handler(void);
+void sys_tick_handler(void) __attribute__((__interrupt__));
+void timer2_handler(void) __attribute__((__interrupt__));
+
 
 /*----------------------------------------------------------*/
 //Unused vector dummy function
-static void unused_vector() {}
+static void unused_vector() { while(1); }
 
 /*----------------------------------------------------------*/
 //Interrupt vector table
@@ -44,7 +45,7 @@ void (* const exceptions_vectors[])(void) =
   unused_vector, //MemManageException
   unused_vector, //BusFaultException
   unused_vector, //UsageFaultException
-  0, 0, 0, 0,            /* Reserved */ 
+  0, 0, 0, 0,            /* Reserved */
   unused_vector, //SVCHandler
   unused_vector, //DebugMonitor
   0,                      /* Reserved */

@@ -55,7 +55,7 @@ int rtc_setup(void)
 	//Enable LSE oscilator
 	RCC->BDCR |= BDCR_LSEON;
 	//Wait for lserdy flag
-	int timeout=50000;
+	int timeout=3000000;
 	while( !(RCC->BDCR & BDCR_LSERDY) )
 		if(--timeout==0) return EXIT_FAILURE;
 	//Enable LSE as RTC clock source

@@ -19,8 +19,13 @@
 //Led timeout
 #define LED_TIMEOUT 6
 
+//Radiation samples count
+#define LOW_SAMPLE_NUMB 40
+#define MED_SAMPLE_NUMB 100
+#define HI_SAMPLE_NUMB 400
+
 //Samples buffer length
-#define SAMPLEBUF_LENGTH (radiationCountHIGH + SAMPLEBUF_MARGIN)
+#define SAMPLEBUF_LENGTH (HI_SAMPLE_NUMB + SAMPLEBUF_MARGIN)
 
 //Sample length for radiation
 static volatile unsigned short samplesLength;
@@ -30,6 +35,7 @@ static volatile int radiationLast;
 
 //High halfword of timer TIM2
 static volatile unsigned short timerHi;
+
 
 //Samples buffer for data
 static volatile unsigned int samples[SAMPLEBUF_LENGTH+1];
@@ -163,13 +169,13 @@ void radiation_reconfigure(enum radiationCountMode mode)
 			samplesLength = 0;
 			break;
 		case radiationCountSHORT:
-			samplesLength = 40;
+			samplesLength = LOW_SAMPLE_NUMB;
 			break;
 		case radiationCountMEDIUM:
-			samplesLength = 100;
+			samplesLength = MED_SAMPLE_NUMB;
 			break;
 		case radiationCountHIGH:
-			samplesLength = 400;
+			samplesLength = HI_SAMPLE_NUMB;
 			break;
 	}
 
@@ -193,7 +199,7 @@ void radiation_reconfigure(enum radiationCountMode mode)
 	else
 	{
 		//Erase memory with samples
-		for(int i=0;i<sizeof(samples);i++) samples[i] = 0;
+		for(int i=0;i<SAMPLEBUF_LENGTH;i++) samples[i] = 0;
 		//Reset sample WR position
 		samplesWrPos = 0;
 		//Prescaler for 5us pulse

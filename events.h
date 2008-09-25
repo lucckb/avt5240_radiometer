@@ -4,33 +4,50 @@
 /*----------------------------------------------------------*/
 
 #include <stdint.h>
+#include "system.h"
 
 /*----------------------------------------------------------*/
 //System Hz
 #define HZ 100
 
-//Number of timers
-#define GENERIC_TIMERS 4
-
-//Define timer assignement
-#define DISPLAY_TIMER 0
-#define DOSE_TIMER 1
-#define BATTERY_TIMER 2
-#define MAXRAD_TIMER 3
-
-
-/*----------------------------------------------------------*/
-//System timer set value
-void timer_set(int id,int tick);
-
-/*----------------------------------------------------------*/
-//System timer get value
-int timer_get(int id);
 
 /*----------------------------------------------------------*/
 
-//Configure system timer to requied interval
+//System timer interrupt in microsecond interval
 void systick_setup(int reload);
+
+/*----------------------------------------------------------*/
+
+//Jiffiess typedef
+typedef unsigned long timer_t;
+
+
+/*----------------------------------------------------------*/
+
+//Global jiffies
+extern volatile timer_t jiffies;
+
+
+/*----------------------------------------------------------*/
+//Timer start macro
+#define timer_start(t_start) (t_start) = jiffies;
+
+/*----------------------------------------------------------*/
+
+//Timer elapsed macro
+#define timer_elapsed(t_start,timeout) jiffies-(t_start)>=(timeout)
+
+/*----------------------------------------------------------*/
+//Function waiting for timer
+static inline void timer_wait(timer_t wait_time)
+{
+	timer_t t0 = jiffies;
+	while(jiffies-t0<wait_time)
+	{
+		iwdt_reset();
+		wfi();
+	}
+}
 
 /*----------------------------------------------------------*/
 

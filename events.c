@@ -28,38 +28,11 @@ void systick_setup(int reload)
 
 /*----------------------------------------------------------*/
 //Global timers
-static volatile int gTimers[GENERIC_TIMERS];
+volatile timer_t jiffies;
 
 //Events flagss
 volatile unsigned long gEvents;
 
-/*----------------------------------------------------------*/
-//System timer set value
-void timer_set(int id,int tick)
-{
-	if(id>=GENERIC_TIMERS) return;
-	gTimers[id] = tick;
-}
-
-/*----------------------------------------------------------*/
-//System timer get value
-int timer_get(int id)
-{
-	if(id>=GENERIC_TIMERS) return -1;
-	return gTimers[id];
-}
-
-
-
-/*----------------------------------------------------------*/
-//Timer usage event
-static void on_timer_support_event(void)
-{
-	for(int i=0;i<GENERIC_TIMERS;i++)
-	{
-		if(gTimers[i]) --gTimers[i];
-	}
-}
 
 /*----------------------------------------------------------*/
 
@@ -145,7 +118,10 @@ void sys_tick_handler(void) __attribute__((__interrupt__));
 void sys_tick_handler(void)
 {
 
-    //Called after 40s timeout event
+    //Increment jiffies
+	jiffies++;
+
+	//Called after 40s timeout event
     on_radiation_timeout_event();
 
     //Keyboyard support
@@ -154,8 +130,6 @@ void sys_tick_handler(void)
     //Buzer timer event handler
     on_buzzer_timer_event();
 
-    //On timer support event
-    on_timer_support_event();
 }
 
 

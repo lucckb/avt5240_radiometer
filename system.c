@@ -173,3 +173,4 @@ void iwdt_setup(uint8_t prescaler,uint16_t reload)
 	IWDG->KR = KR_KEY_Enable;
 }
 
+/*----------------------------------------------------------*/
