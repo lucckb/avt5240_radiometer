@@ -38,8 +38,6 @@ static void perhiph_init(void)
 	  adc_setup();
 	  //Initialize kbd
 	  keyb_setup();
-	  //Initialize watchdog
-	  iwdt_setup(IWDG_Prescaler_16,0xFFF);
 
 	  //Check for valid configuration
 	  if(isvalid_config()==false)
@@ -59,6 +57,10 @@ static void perhiph_init(void)
 		  //Init backup domain only
 		  bkp_init();
 	  }
+
+	  //Initialize watchdog
+	  iwdt_setup(IWDG_Prescaler_16,0xFFF);
+
 	  //Initialize TIM2 for radiation
 	  radiation_setup();
 }

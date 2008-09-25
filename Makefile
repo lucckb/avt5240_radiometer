@@ -8,7 +8,7 @@ FORMAT	= bin
 
 #Optymalizacja [0,1,2,3,s]
 # 0 - brak optymalizacji, s -optymalizacja rozmiaru
-OPT 	= s
+OPT 	= 0
 
 
 #Common flags 
@@ -22,7 +22,7 @@ CFLAGS += -std=gnu99
 CXXFLAGS += $(COMMON_FLAGS)
 
 #Wlaczyc wylaczyc listing
-LISTING = y
+LISTING = n
 
 #Wlaczyc wylaczyc debug
 DEBUG = y
