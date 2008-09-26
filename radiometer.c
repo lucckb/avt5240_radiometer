@@ -47,6 +47,7 @@ static void perhiph_init(void)
 		 {
 			 lcd_setpos(1,1);
 			 lcd_printf("LSE osc ");
+			 lcd_setpos(1,2);
 			 lcd_printf("FAILED  ");
 			 while(1);
 		 }
