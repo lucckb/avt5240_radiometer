@@ -76,7 +76,7 @@ static void introduction(void)
 	//Write initial message
 	lcd_printf("BoFF-R10");
 	lcd_setpos(1,2);
-	lcd_printf("ver0.90");
+	lcd_printf("ver0.91");
 	//Enable buzzer
 	buzer_alarm(true);
 	//Wait 1s

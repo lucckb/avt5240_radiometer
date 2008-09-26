@@ -47,15 +47,18 @@ int rtc_setup(void)
 {
 	//Enable clock for power and backup domains
 	RCC->APB1ENR |= RCC_APB1Periph_PWR | RCC_APB1Periph_BKP;
+	nop();
 	//Enable acces to RTC and backup regs
 	PWR_CR |= PWR_CR_DBP;
+	nop();
 	//Disable LSE oscilator
 	RCC->BDCR &= ~BDCR_LSEON;
+	nop();
 	nop();
 	//Enable LSE oscilator
 	RCC->BDCR |= BDCR_LSEON;
 	//Wait for lserdy flag
-	int timeout=3000000;
+	int timeout=5000000;
 	while( !(RCC->BDCR & BDCR_LSERDY) )
 		if(--timeout==0) return EXIT_FAILURE;
 	//Enable LSE as RTC clock source
