@@ -28,7 +28,6 @@ extern int main(void);
 void sys_tick_handler(void) __attribute__((__interrupt__));
 void timer2_handler(void) __attribute__((__interrupt__));
 
-
 /*----------------------------------------------------------*/
 static void unused_vector(void) __attribute__((__interrupt__));
 //Unused vector dummy function
@@ -110,7 +109,7 @@ void (* const exceptions_vectors[])(void) =
 //Default reset handler
 void reset_handler(void)
 {
-    unsigned long *pulSrc, *pulDest;
+	unsigned long *pulSrc, *pulDest;
 
     //
     // Copy the data segment initializers from flash to SRAM.

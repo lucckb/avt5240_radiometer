@@ -22,6 +22,7 @@
 //Initialize system perhiperals
 static void perhiph_init(void)
 {
+
 	  //Initialize system perhiperals
 	  system_setup();
 	  //Enable PWM generation

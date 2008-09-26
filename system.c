@@ -5,7 +5,7 @@
 
 #include "stm32f10x_lib.h"
 #include "system.h"
-
+#include "lcd.h"
 
 //External crystal on
 #define RCC_CR_HSEON (1<<16)
@@ -23,17 +23,14 @@
 #define RCC_CFGR_MCO_SYSCLK (4<<24)
 //Configure ADC prescaler to 8
 #define RCC_CFGR_ADCPRE_8 (3<<14)
-
 //HSE oscilator control
 #define RCC_CR_HSI_ON (1<<0)
-
-
 
 /*----------------------------------------------------------*/
 //Cortex stm32 System setup
 void system_setup(void)
 {
-    //Configure CLK clock
+	//Configure CLK clock
     RCC->CR &= ~RCC_CR_HSEON;
     //Disable Bypass
     RCC->CR &= ~RCC_CR_HSEBYP;
