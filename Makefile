@@ -8,7 +8,7 @@ FORMAT	= bin
 
 #Optymalizacja [0,1,2,3,s]
 # 0 - brak optymalizacji, s -optymalizacja rozmiaru
-OPT 	= 0
+OPT 	= s
 
 
 #Common flags 
@@ -25,7 +25,7 @@ CXXFLAGS += $(COMMON_FLAGS)
 LISTING = n
 
 #Wlaczyc wylaczyc debug
-DEBUG = y
+DEBUG = n
 
 
 include scripts/stm32.mk

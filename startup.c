@@ -33,7 +33,6 @@ static void unused_vector(void) __attribute__((__interrupt__));
 //Unused vector dummy function
 static void unused_vector() { while(1); }
 
-
 /*----------------------------------------------------------*/
 //Interrupt vector table
 __attribute__ ((section(".isr_vector")))
