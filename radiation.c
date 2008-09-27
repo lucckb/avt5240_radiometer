@@ -43,6 +43,7 @@ static volatile unsigned int samples[SAMPLEBUF_LENGTH+1];
 //Current sample position counter
 static volatile unsigned short samplesWrPos;
 
+
 //Timer for standard algoritm
 volatile short Tim40s = HZ*40;
 
@@ -272,11 +273,13 @@ void on_radiation_timeout_event(void)
 	//In standard alghoritm move measured radiation to dose
 	if(--Tim40s==0)
 	{
+		//Update radiation last
 		if(samplesLength==0)
 		{
 			radiationLast = ((uint32_t)timerHi << 16) | TIM2->CNT;
 			TIM2->CNT = 0;
 		}
+		//Reload timer
 		Tim40s = HZ * 40;
 	}
 	//Disable blink LED when event finished
