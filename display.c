@@ -323,13 +323,13 @@ static void keyb_yesno(appState *app);
 static void keyb_datemenu(appState *app)
 {
 	uint8_t key = keyb_get();
-	if(key==KEY_ENTER)
+	if(key==KEY_NEXT)
 	{
 		app->cursorPos++;
 		if(app->cursorPos>TIMESET_YEAR)
 			app->cursorPos=TIMESET_HOUR;
 	}
-	else if(key&KEY_NEXT)
+	else if(key&KEY_ENTER)
 	{
 		switch(app->cursorPos)
 		{
