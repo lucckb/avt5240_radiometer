@@ -8,11 +8,11 @@ SCRIPTLINK = stm32
 
 
 #Definicje programow
-CC      = arm-elf-gcc
-CXX	= arm-elf-c++
-AR      = arm-elf-ar
-CP      = arm-elf-objcopy
-OBJDUMP = arm-elf-objdump 
+CC      = arm-none-eabi-gcc
+CXX		= arm-none-eabi-c++
+AR      = arm-none-eabi-ar
+CP      = arm-none-eabi-objcopy
+OBJDUMP = arm-none-eabi-objdump 
 JTAGPROG  = openocd
 
 OCDSCRIPT=/tmp/pgm.script
